@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【デモ】プロフィール画面</title>
+<link rel="stylesheet" href="../style/profile.css">
+<script src="../script/profile.js" defer></script>
+<script src="https://kit.fontawesome.com/a4f2e2c2ef.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+  <nav class="menu">
+    <button onclick="alert('購入画面へ')">購入画面</button>
+    <button onclick="alert('出品へ')">出品</button>
+    <button onclick="alert('メッセージへ')">メッセージ</button>
+    <button onclick="alert('ログインへ')">ログイン</button>
+    <button class="active">プロフィール</button>
+  </nav>
+</header>
+
+<div class="container">
+  <div class="header-box">
+    <h2><i class="fa-solid fa-user-pen"></i> プロフィール（デモ）</h2>
+  </div>
+
+  <div class="content">
+    <div class="left">
+      <div class="card">
+        <div class="row center">
+          <img src="../images/sample_avatar.png" alt="アバター画像" class="avatar">
+        </div>
+        <div class="row"><div class="label">表示名</div><div class="value">山口哲平</div></div>
+        <div class="row"><div class="label">ユーザー名</div><div class="value">k484yama</div></div>
+        <div class="row"><div class="label">大学メール</div>
+          <div class="value"><span class="email-badge">k484yama@mails.cc.ehime-u.ac.jp</span></div>
+        </div>
+        <div class="row"><div class="label">学部</div><div class="value">工学部</div></div>
+        <div class="row top"><div class="label">自己紹介</div><div class="value">AI・機械学習に興味があります。</div></div>
+        <p class="hint">※ 保存済み情報を表示しています。</p>
+      </div>
+    </div>
+
+    <div class="right">
+      <form class="card" onsubmit="showSaveNotice(); return false;">
+        <div class="form-group">
+          <label><i class="fa-solid fa-signature"></i> 表示名</label>
+          <input type="text" placeholder="山口 哲平">
+        </div>
+        <div class="form-group">
+          <label><i class="fa-solid fa-envelope"></i> 愛媛大学メールアドレス</label>
+          <div class="input-inline">
+            <input type="text" placeholder="k484yama">
+            <span>@mails.cc.ehime-u.ac.jp</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label><i class="fa-solid fa-graduation-cap"></i> 学部</label>
+          <select>
+            <option>選択してください</option>
+            <option selected>工学部</option>
+            <option>理学部</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label><i class="fa-solid fa-comment-dots"></i> 自己紹介</label>
+          <textarea placeholder="研究分野・得意科目など">AIブレスレットを開発中です。</textarea>
+        </div>
+        <div class="form-group">
+          <label><i class="fa-solid fa-image"></i> アバター画像（任意）</label>
+          <input type="file" accept="image/*">
+          <div class="hint">正方形推奨 / 2MB以下</div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-secondary" onclick="alert('変更を破棄しました')"><i class="fa-solid fa-rotate-left"></i> 破棄</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> 保存する</button>
+        </div>
+        <div id="saveNotice">✅ 保存しました！（デモ）</div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

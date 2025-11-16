@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【デザイン確認】教科書一覧</title>
+<link rel="stylesheet" href="../style/book_list.css">
+<script src="../script/book_list.js" defer></script>
+</head>
+<body>
+<header>
+    <nav class="menu">
+        <button class="active" onclick="alert('購入画面')">購入画面</button>
+        <button onclick="alert('出品')">出品</button>
+        <button onclick="alert('メッセージ')">メッセージ</button>
+        <button onclick="alert('ログイン')">ログイン</button>
+        <button onclick="alert('プロフィール')">プロフィール</button>
+    </nav>
+</header>
+
+<div class="book-container">
+  <div class="column" id="colOthers">
+    <h2>📘 購入可能な教科書</h2>
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <input id="searchOthers" type="text" placeholder="教科書名・学部・価格で検索..." />
+        <button id="clearOthers" class="clear-btn">✕</button>
+      </div>
+    </div>
+
+    <div class="book-item" data-group="others" data-search="線形代数 共通教育 500">
+      <img src="../images/sample_book.jpg" class="book-image">
+      <div class="book-info">
+        <div class="book-title">線形代数入門</div>
+        <div class="book-faculty">共通教育</div>
+        <div class="book-price">500円</div>
+        <div class="action-buttons">
+          <button class="message-btn" onclick="alert('メッセージ送信')">💬 メッセージ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="column" id="colMine">
+    <h2>📗 自分の出品教科書</h2>
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <input id="searchMine" type="text" placeholder="自分の教科書を検索..." />
+        <button id="clearMine" class="clear-btn">✕</button>
+      </div>
+    </div>
+
+    <div class="book-item" data-group="mine" data-search="微分積分 工学部 応用情報 0">
+      <img src="../images/sample_book.jpg" class="book-image">
+      <div class="book-info">
+        <div class="book-title">微分積分学 I</div>
+        <div class="book-faculty">工学部 応用情報工学科</div>
+        <div class="book-price">無料</div>
+        <div class="action-buttons">
+          <button class="edit-btn" onclick="alert('編集')">✏️ 編集</button>
+          <button class="delete-btn" onclick="alert('削除確認')">🗑 削除</button>
+          <button class="message-btn" onclick="alert('メッセージ送信')">💬 メッセージ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>©2025 愛媛大学 yuzurinプロジェクト（デモ版）</footer>
+</body>
+</html>

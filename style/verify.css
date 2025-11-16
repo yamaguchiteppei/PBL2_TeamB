@@ -1,0 +1,44 @@
+body {
+  font-family: "Noto Sans JP", sans-serif;
+  background-color: #f7f9fc;
+  text-align: center;
+  padding-top: 100px;
+  animation: fadeIn 0.8s ease;
+}
+
+.verify-box {
+  display: inline-block;
+  background: #fff;
+  padding: 2.5em 3.5em;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  animation: slideUp 0.8s ease;
+}
+
+h2 {
+  color: #004b97;
+  margin-bottom: 0.8em;
+}
+
+p {
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 1.5em;
+}
+
+a {
+  display: inline-block;
+  background: #004b97;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 22px;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+a:hover { background: #2a72d4; transform: scale(1.05); }
+
+.error { color: #d9534f; font-weight: bold; }
+
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+@keyframes slideUp { from {transform:translateY(20px);opacity:0;} to {transform:translateY(0);opacity:1;} }

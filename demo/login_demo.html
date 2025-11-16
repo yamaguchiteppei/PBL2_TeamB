@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【デザイン確認】ログイン画面</title>
+<link rel="stylesheet" href="../style/login.css">
+<script src="../script/login.js" defer></script>
+<script src="https://kit.fontawesome.com/a4f2e2c2ef.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+    <nav class="menu">
+        <button onclick="alert('購入画面へ')">購入画面</button>
+        <button onclick="alert('出品ページへ')">出品</button>
+        <button onclick="alert('メッセージへ')">メッセージ</button>
+        <button class="active">ログイン</button>
+        <button onclick="alert('プロフィールへ')">プロフィール</button>
+    </nav>
+</header>
+
+<div class="login-container">
+    <div class="header">
+        <h2><i class="fa-solid fa-right-to-bracket"></i> ログイン（デモ）</h2>
+        <a href="#" class="register-link"><i class="fa-solid fa-user-plus"></i> 新規登録へ</a>
+    </div>
+
+    <form onsubmit="alert('✅ ログイン成功（デモ）'); return false;">
+        <div class="form-group">
+            <label for="username"><i class="fa-solid fa-envelope"></i> 愛媛大学メールアドレス</label>
+            <div class="username-row">
+                <input type="text" id="username" required>
+                <span class="domain">@mails.cc.ehime-u.ac.jp</span>
+            </div>
+        </div>
+
+        <div class="form-group password-toggle">
+            <label for="password"><i class="fa-solid fa-lock"></i> パスワード</label>
+            <input type="password" id="password" required>
+            <span class="toggle-icon" onclick="togglePassword('password', this)">
+                <i class="fa-solid fa-eye"></i>
+            </span>
+        </div>
+
+        <button type="submit"><i class="fa-solid fa-arrow-right-to-bracket"></i> ログイン</button>
+
+        <div class="extra-links">
+            <a href="#"><i class="fa-solid fa-key"></i> パスワードを忘れた方はこちら</a>
+        </div>
+    </form>
+</div>
+
+<footer>© 2025 愛媛大学 yuzurinプロジェクト</footer>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【デモ】メッセージ一覧</title>
+<link rel="stylesheet" href="../style/message_list.css">
+<script src="../script/message_list.js" defer></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<header>
+  <nav class="menu">
+    <button onclick="alert('購入画面へ')">購入画面</button>
+    <button onclick="alert('出品へ')">出品</button>
+    <button class="active">メッセージ</button>
+    <button onclick="alert('ログインへ')">ログイン</button>
+    <button onclick="alert('プロフィールへ')">プロフィール</button>
+  </nav>
+</header>
+
+<div class="message-container">
+  <div class="chat-list">
+    <h3>📚 取引中の教科書（デモ）</h3>
+    <div class="chat-item" data-seller="山田太郎" data-book="線形代数入門">
+      <img src="../images/sample_avatar.png" class="chat-avatar">
+      <div class="chat-info">
+        <div class="chat-book">線形代数入門</div>
+        <div class="chat-seller">山田太郎 <span class="unread-badge">2</span></div>
+        <div class="chat-preview">また明日渡します！</div>
+      </div>
+    </div>
+
+    <div class="chat-item" data-seller="佐藤花子" data-book="物理学概論">
+      <img src="../images/sample_avatar.png" class="chat-avatar">
+      <div class="chat-info">
+        <div class="chat-book">物理学概論</div>
+        <div class="chat-seller">佐藤花子</div>
+        <div class="chat-preview">値下げできますか？</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-screen">
+    <div class="chat-header">
+      <h2>線形代数入門</h2>
+      <p>山田太郎</p>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="message received">こんにちは！</div>
+      <div class="message sent">教科書まだありますか？</div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="messageInput" placeholder="メッセージを入力...">
+      <button id="sendBtn">送信</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

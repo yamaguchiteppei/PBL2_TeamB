@@ -1,0 +1,113 @@
+body {
+  font-family: "Noto Sans JP", sans-serif;
+  background-color: #f5f6f8;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== ヘッダー ===== */
+header {
+  background-color: #004b97;
+  color: white;
+  padding: 0.8rem 2rem;
+}
+.menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+}
+.menu button {
+  background: white;
+  color: #004b97;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.menu button:hover { background: #e7edf9; }
+.menu .active {
+  background: #004b97;
+  color: white;
+  border: 1px solid white;
+}
+
+/* ===== タイトル ===== */
+.page-title {
+  text-align: center;
+  margin: 40px 0 20px;
+  color: #004b97;
+}
+
+/* ===== フォーム ===== */
+form {
+  max-width: 700px;
+  margin: 0 auto 50px;
+  background: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+.form-group {
+  margin-bottom: 25px;
+}
+label {
+  font-weight: bold;
+  color: #333;
+}
+.required {
+  color: red;
+  font-weight: normal;
+}
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+input[type="file"] {
+  margin-top: 8px;
+}
+.options {
+  margin-top: 8px;
+  line-height: 1.8;
+}
+.options input[type="radio"] {
+  margin-right: 5px;
+}
+
+/* ===== ボタン ===== */
+.submit-btn {
+  display: block;
+  width: 100%;
+  background: #004b97;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.submit-btn:hover {
+  background: #2a72d4;
+}
+
+/* ===== 価格欄 ===== */
+#priceField {
+  display: none;
+  margin-top: 10px;
+}
+
+/* ===== スマホ対応 ===== */
+@media (max-width: 600px) {
+  form { padding: 20px; }
+  .menu { flex-direction: column; gap: 10px; }
+}

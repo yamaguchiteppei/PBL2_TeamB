@@ -1,0 +1,140 @@
+/* ===== 全体レイアウト ===== */
+body {
+  font-family: "Noto Sans JP", sans-serif;
+  background-color: #f5f6f8;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== 上部メニュー ===== */
+header {
+  background-color: #004b97;
+  color: white;
+  padding: 0.8rem 2rem;
+}
+
+.menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.menu button {
+  background: white;
+  color: #004b97;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.menu button:hover {
+  background: #e7edf9;
+}
+
+.menu .active {
+  background: #004b97;
+  color: white;
+  border: 1px solid white;
+}
+
+/* ===== タイトル＆戻るボタン ===== */
+.title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+h2 {
+  color: #004b97;
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+/* --- フェード付き戻るボタン --- */
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  opacity: 0.9;
+}
+
+.back-btn:hover {
+  background: #5a6268;
+  opacity: 1;
+  transform: translateX(-4px);
+}
+
+.back-btn span {
+  transition: transform 0.3s ease;
+}
+
+.back-btn:hover span {
+  transform: translateX(-4px);
+}
+
+/* ===== メインフォーム ===== */
+form {
+  max-width: 600px;
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #333;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: #fafafa;
+}
+
+button[type="submit"] {
+  margin-top: 25px;
+  width: 100%;
+  background: #004b97;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+button[type="submit"]:hover {
+  background: #2a72d4;
+}
+
+/* ===== フェードインアニメーション ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

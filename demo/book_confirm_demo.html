@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【デザイン確認】出品内容の確認</title>
+<link rel="stylesheet" href="../style/book_confirm.css">
+<script src="../script/book_confirm.js" defer></script>
+</head>
+<body>
+<header>
+    <nav class="menu">
+        <button onclick="alert('購入画面へ')">購入画面</button>
+        <button class="active">出品</button>
+        <button onclick="alert('メッセージへ')">メッセージ</button>
+        <button onclick="alert('ログインへ')">ログイン</button>
+        <button onclick="alert('プロフィールへ')">プロフィール</button>
+    </nav>
+</header>
+
+<h2 class="page-title">📘 出品内容の確認（デモ）</h2>
+
+<div class="confirm-box">
+    <p class="message">以下の内容で出品します。内容を確認してください。</p>
+
+    <div class="confirm-item">
+        <label>・教科書名：</label><span>線形代数入門</span>
+    </div>
+
+    <div class="confirm-item">
+        <label>・教科書画像：</label>
+        <img src="../images/sample_book.jpg" id="bookImage" alt="教科書画像">
+    </div>
+
+    <div class="confirm-item">
+        <label>・譲渡形式：</label><span>有償（500円）</span>
+    </div>
+
+    <div class="confirm-item">
+        <label>・使用学部・学科：</label><span>工学部 応用情報工学科</span>
+    </div>
+
+    <div class="confirm-item">
+        <label>・出品者：</label><span>山口哲平</span>
+    </div>
+
+    <div class="buttons">
+        <button class="back-btn" onclick="alert('戻るボタンが押されました')">戻る</button>
+        <button class="submit-btn" onclick="alert('出品処理をシミュレート中...')">出品する</button>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>【デモ】登録確認 | yuzurin</title>
+<link rel="stylesheet" href="../style/verify.css">
+<script src="../script/verify.js" defer></script>
+</head>
+<body>
+  <div class="verify-box">
+    <h2>ℹ️ このアカウントはすでに登録済みです</h2>
+    <p>すでにメール認証が完了しています。<br>以下からログインページへ移動してください。</p>
+    <a href="#" onclick="alert('ログインページへ遷移（デモ）')">ログインページへ</a>
+  </div>
+
+  <div style="margin-top:40px;">
+    <button onclick="showInvalid()">❌ 無効リンク状態に切り替え</button>
+  </div>
+
+<script>
+function showInvalid() {
+  document.querySelector('.verify-box').innerHTML = `
+    <h2 class="error">❌ 無効なリンクです</h2>
+    <p>リンクの有効期限が切れているか、すでに使用されています。<br>再度登録を行ってください。</p>
+    <a href="#" onclick="alert('新規登録ページへ遷移（デモ）')">新規登録ページへ</a>
+  `;
+}
+</script>
+</body>
+</html>

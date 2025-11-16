@@ -1,0 +1,116 @@
+body {
+  font-family: "Noto Sans JP", sans-serif;
+  background-color: #f7f9fc;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #004b97;
+  color: white;
+  padding: 0.8rem 2rem;
+}
+
+.menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.menu button {
+  background: white;
+  color: #004b97;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.menu button:hover {
+  background-color: #e6eef8;
+}
+
+.menu .active {
+  background-color: #004b97;
+  color: white;
+}
+
+.page-title {
+  text-align: center;
+  margin: 2rem 0 1rem;
+}
+
+.confirm-box {
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.message {
+  text-align: center;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.confirm-item {
+  margin: 0.8rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.confirm-item label {
+  font-weight: bold;
+  width: 150px;
+  color: #004b97;
+}
+
+.confirm-item span {
+  flex: 1;
+  color: #333;
+}
+
+#bookImage {
+  width: 120px;
+  height: auto;
+  border-radius: 8px;
+  margin-left: 10px;
+}
+
+.buttons {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.back-btn,
+.submit-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  margin: 0 8px;
+  transition: 0.2s;
+}
+
+.back-btn {
+  background-color: #ccc;
+}
+
+.back-btn:hover {
+  background-color: #aaa;
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.submit-btn:hover {
+  background-color: #005fcc;
+}

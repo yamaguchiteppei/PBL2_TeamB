@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【デモ】新規登録 | yuzurin</title>
+<link rel="stylesheet" href="../style/register.css">
+<script src="../script/register.js" defer></script>
+<script src="https://kit.fontawesome.com/a4f2e2c2ef.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+  <nav class="menu">
+    <button onclick="alert('購入画面へ')">購入画面</button>
+    <button onclick="alert('出品へ')">出品</button>
+    <button onclick="alert('メッセージへ')">メッセージ</button>
+    <button class="active">新規登録</button>
+    <button onclick="alert('プロフィールへ')">プロフィール</button>
+  </nav>
+</header>
+
+<div class="register-card">
+  <div class="register-header">
+    <button class="back-btn" onclick="alert('戻るボタンが押されました')">
+      <i class="fa-solid fa-arrow-left"></i> 戻る
+    </button>
+    <h2><i class="fa-solid fa-user-plus"></i> 新規登録（デモ）</h2>
+  </div>
+
+  <div class="success-message">✅ UIのみのデモ版です。登録は行われません。</div>
+
+  <form onsubmit="alert('登録処理をシミュレート中...'); return false;">
+    <div class="form-group">
+      <label><i class="fa-solid fa-user"></i> 愛媛大学ユーザー名</label>
+      <input type="text" placeholder="k484yama">
+      <span class="domain">@mails.cc.ehime-u.ac.jp</span>
+    </div>
+
+    <div class="form-group">
+      <label><i class="fa-solid fa-lock"></i> パスワード（8文字以上）</label>
+      <input type="password">
+    </div>
+
+    <div class="form-group">
+      <label><i class="fa-solid fa-lock"></i> パスワード（確認）</label>
+      <input type="password">
+    </div>
+
+    <button type="submit"><i class="fa-solid fa-user-check"></i> 登録する</button>
+  </form>
+
+  <a href="#" class="login-link">すでにアカウントをお持ちの方はこちら ＞</a>
+</div>
+
+<footer>© 2025 愛媛大学 yuzurinプロジェクト</footer>
+</body>
+</html>

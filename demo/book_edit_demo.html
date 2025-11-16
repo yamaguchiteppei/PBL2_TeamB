@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>【デザイン確認】教科書編集ページ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../style/book_edit.css">
+<script src="../script/book_edit.js" defer></script>
+</head>
+<body>
+
+<header>
+  <nav class="menu">
+    <button onclick="alert('購入画面へ')">購入画面</button>
+    <button onclick="alert('出品へ')">出品</button>
+    <button onclick="alert('メッセージへ')">メッセージ</button>
+    <button onclick="alert('ログインへ')">ログイン</button>
+    <button onclick="alert('プロフィールへ')">プロフィール</button>
+  </nav>
+</header>
+
+<div class="title-bar">
+  <a href="#" class="back-btn"><span>←</span> 教科書一覧へ戻る</a>
+  <h2>📘 教科書情報の編集（デモ）</h2>
+</div>
+
+<form>
+  <label>教科書名</label>
+  <input type="text" value="線形代数入門">
+
+  <label>価格（円）</label>
+  <input type="number" value="500" min="0" step="100">
+
+  <label>学部・学科</label>
+  <select>
+      <option>共通教育</option>
+      <option selected>工学部　応用情報コース</option>
+      <option>工学部　コンピュータ科学コース</option>
+      <option>教育学部</option>
+      <option>法文学部</option>
+  </select>
+
+  <button type="button" onclick="alert('デザイン確認：更新ボタン')">更新する</button>
+</form>
+
+</body>
+</html>
