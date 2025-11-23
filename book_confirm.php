@@ -37,7 +37,7 @@ if (isset($_POST['confirm'])) {
         'title'   => $bookName ?: '未入力のタイトル',
         'image'   => $imagePath,
         'faculty' => $faculty ?: '未選択',
-        'price'   => ($tradeType === 'paid' && $price) ? "{$price}" : '無料',
+        'price'   => ($tradeType === 'paid' && $price) ? "{$price}" : '0',
         'seller'  => $seller
     ];
 
