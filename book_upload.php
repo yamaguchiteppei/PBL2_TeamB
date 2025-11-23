@@ -50,10 +50,30 @@
         <select name="faculty">
             <option value="">選択する</option>
             <option>共通教育</option>
-            <option>工学部　応用情報コース</option>
-            <option>工学部　コンピュータ科学コース</option>
-            <option>教育学部</option>
-            <option>法文学部</option>
+            <option>工学部　情報分野</option>
+            <option>工学部　機械・システム分野</option>
+            <option>工学部　電気分野</option>
+            <option>工学部　材料・化学分野</option>
+            <option>工学部　土木・環境分野</option>
+            <option>理学部　数学・数理情報コース</option>
+            <option>理学部　物理学コース</option>
+            <option>理学部　化学コース</option>
+            <option>理学部　生物学コース</option>
+            <option>理学部　地学コース</option>
+            <option>農学部　食糧生産学科</option>
+            <option>農学部　生命機能学科</option>
+            <option>農学部　生物環境学科</option>
+            <option>医学部　医学科</option>
+            <option>医学部　看護学科</option>
+            <option>法文部　法学・政策学履修コース</option>
+            <option>法文部　グローバル・スタディーズ履修コース</option>
+            <option>法文部　人文学履修コース</option>
+            <option>教育学部　教育発達実践コース</option>
+            <option>教育学部　初等中等教育コース</option>
+            <option>社会共創学部　産業マネジメント学科</option>
+            <option>社会共創学部　産業イノベーション学科</option>
+            <option>社会共創学部　環境デザイン学科</option>
+            <option>社会共創学部　地域資源マネジメント学科</option>
         </select>
     </div>
 
