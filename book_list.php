@@ -27,6 +27,7 @@ foreach ($books as $index => $book) {
 <title>教科書一覧</title>
 <link rel="stylesheet" href="style/book_list.css">
 <script src="script/book_list.js" defer></script>
+<script src="https://kit.fontawesome.com/a4f2e2c2ef.js" crossorigin="anonymous"></script> 
 </head>
 <body>
 <header>

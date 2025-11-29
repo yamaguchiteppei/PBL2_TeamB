@@ -6,6 +6,7 @@
 <title>教科書出品</title>
 <link rel="stylesheet" href="style/book_upload.css">
 <script src="script/book_upload.js" defer></script>
+<script src="https://kit.fontawesome.com/a4f2e2c2ef.js" crossorigin="anonymous"></script> 
 </head>
 
 <body>

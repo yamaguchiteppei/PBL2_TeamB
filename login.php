@@ -53,11 +53,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
 <header>
     <nav class="menu">
-        <button onclick="location.href='book_list.php'">購入画面</button>
-        <button onclick="location.href='book_upload.php'">出品</button>
-        <button onclick="location.href='message_list.php'">メッセージ</button>
-        <button class="active">ログイン</button>
-        <button onclick="location.href='profile.php'">プロフィール</button>
+        <button type="button" onclick="location.href='book_list.php'">購入画面</button>
+        <button type="button" onclick="location.href='book_upload.php'">出品</button>
+        <button type="button" onclick="location.href='message_list.php'">メッセージ</button>
+        <button type="button" class="active">ログイン</button>
+        <button type="button" onclick="location.href='profile.php'">プロフィール</button>
     </nav>
 </header>
 

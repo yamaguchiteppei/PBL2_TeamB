@@ -58,15 +58,16 @@ if (isset($_POST['confirm'])) {
 <title>出品内容の確認</title>
 <link rel="stylesheet" href="style/book_confirm.css">
 <script src="script/book_confirm.js" defer></script>
+<script src="https://kit.fontawesome.com/a4f2e2c2ef.js" crossorigin="anonymous"></script> 
 </head>
 <body>
 <header>
     <nav class="menu">
-        <button onclick="location.href='book_list.php'">購入画面</button>
-        <button class="active">出品</button>
-        <button onclick="location.href='message_list.php'">メッセージ</button>
-        <button onclick="location.href='login.php'">ログイン</button>
-        <button onclick="location.href='profile.php'">プロフィール</button>
+        <button type="button" onclick="location.href='book_list.php'">購入画面</button>
+        <button type="button" class="active">出品</button>
+        <button type="button" onclick="location.href='message_list.php'">メッセージ</button>
+        <button type="button" onclick="location.href='login.php'">ログイン</button>
+        <button type="button" onclick="location.href='profile.php'">プロフィール</button>
     </nav>
 </header>
 
