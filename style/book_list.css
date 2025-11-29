@@ -7,10 +7,9 @@ body {
 
 /* ===== ナビゲーション ===== */
 header {
-  background: #004b97;
-  color: #fff;
+  background-color: #004b97;
+  color: white;
   padding: 0.8rem 2rem;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 .menu {
   display: flex;
@@ -19,23 +18,20 @@ header {
   gap: 1.2rem;
 }
 .menu button {
-  background: #fff;
+  background: white;
   color: #004b97;
   border: none;
   padding: 8px 20px;
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.25s;
+  transition: 0.2s;
 }
-.menu button:hover {
-  background: #e7edf9;
-  transform: translateY(-2px);
-}
+.menu button:hover { background: #e7edf9; }
 .menu .active {
   background: #004b97;
-  color: #fff;
-  border: 1px solid #fff;
+  color: white;
+  border: 1px solid white;
 }
 
 /* ===== レイアウト ===== */
@@ -160,4 +156,49 @@ footer {
 @media (max-width: 900px) {
   .book-container { flex-direction: column; }
   .column + .column { border-left: none; border-top: 1px solid #ddd; }
+}
+/* ===== SOLD OUT バッジ ===== */
+.sold-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.book-item {
+  position: relative; /* ← バッジを載せるために必要 */
+}
+.book-item.sold {
+  opacity: 0.55;
+  pointer-events: none; /* SOLD OUT はクリック不可 */
+}
+.available-btn {
+    background-color: #17a2b8; /* 青緑 */
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+.available-btn:hover {
+    background-color: #138496;
+}
+
+.sold-btn {
+    background-color: #6c757d;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+.sold-btn:hover {
+    background-color: #5a6268;
 }
