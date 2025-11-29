@@ -7,9 +7,10 @@ body {
 
 /* ===== ナビゲーション ===== */
 header {
-  background-color: #004b97;
-  color: white;
+  background: #004b97;
+  color: #fff;
   padding: 0.8rem 2rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 .menu {
   display: flex;
@@ -18,20 +19,23 @@ header {
   gap: 1.2rem;
 }
 .menu button {
-  background: white;
+  background: #fff;
   color: #004b97;
   border: none;
   padding: 8px 20px;
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.25s;
 }
-.menu button:hover { background: #e7edf9; }
+.menu button:hover {
+  background: #e7edf9;
+  transform: translateY(-2px);
+}
 .menu .active {
   background: #004b97;
-  color: white;
-  border: 1px solid white;
+  color: #fff;
+  border: 1px solid #fff;
 }
 
 /* ===== レイアウト ===== */
