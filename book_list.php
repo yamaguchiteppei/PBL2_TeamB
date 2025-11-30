@@ -77,11 +77,13 @@ foreach ($books as $index => $book) {
                             <?php endif; ?>
                         </div>
                         <div class="action-buttons">
+                            
                             <form action="message_list.php" method="get">
                                 <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
                                 <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
                                 <button type="submit" class="message-btn">💬 メッセージ</button>
                             </form>
+                            <button onclick="location.href='book_detail.php?index=<?= $book['index'] ?>'" class="detail-btn">📖 詳細</button>
                         </div>
                     </div>
                 </div>
@@ -138,6 +140,7 @@ foreach ($books as $index => $book) {
                                 <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
                                 <button type="submit" class="message-btn">💬 メッセージ</button>
                             </form>
+                            <button onclick="location.href='book_detail.php?index=<?= $book['index'] ?>'" class="detail-btn">📖 詳細</button>
                         </div>
                     </div>
                 </div>
