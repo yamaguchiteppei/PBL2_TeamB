@@ -1,11 +1,6 @@
 <?php
-session_start();
-
-// 🔐 ログイン確認
-if (!isset($_SESSION['user'])) {
-    header("Location: login.php");
-    exit;
-}
+require __DIR__ . '/php/auth.php';
+require_login();
 
 $sessionUser  = $_SESSION['user']['username'];
 $sessionEmail = $_SESSION['user']['email'];

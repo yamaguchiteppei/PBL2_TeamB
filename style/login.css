@@ -161,6 +161,17 @@ button[type="submit"]:hover {
 }
 
 /* ===== エラーメッセージ ===== */
+.info-message {
+  background: #eef3ff;
+  color: #004b97;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  border: 1px solid #cfe0ff;
+  text-align: center;
+}
+.info-message a { color: #0b66d1; }
 .error-message {
   background: #ffe5e5;
   color: #d93025;

@@ -1,3 +1,7 @@
+<?php
+require __DIR__ . '/php/auth.php';
+require_login();
+?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
