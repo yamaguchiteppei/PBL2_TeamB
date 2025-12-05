@@ -1,4 +1,7 @@
 <?php
+require __DIR__ . '/php/auth.php';
+require_login();
+
 // ==== チャットログ読み込み ====
 $chat_file = __DIR__ . '/chat_log.json';
 if (!file_exists($chat_file)) file_put_contents($chat_file, json_encode([], JSON_UNESCAPED_UNICODE));
