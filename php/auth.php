@@ -11,7 +11,7 @@ function require_login() {
         $_SESSION['after_login_redirect'] = $_SERVER['REQUEST_URI'] ?? null;
         // フラッシュメッセージ
         $_SESSION['flash'] = 'このページはログインが必要です。ログインしてください。';
-        header('Location: /yuzurin2/login.php');
+        header('Location:login.php');
         exit;
     }
 }

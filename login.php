@@ -37,9 +37,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         // 安全確認：パス形式で始まる内部パスかを確認し、
                         // login.php を含む場合や外部URLの疑いがある場合はフォールバックする
                         $path = parse_url($dest, PHP_URL_PATH) ?: '';
-                        if (strpos($path, 'login.php') !== false || strpos($dest, '/') !== 0) {
-                            $dest = 'book_list.php';
-                        }
+                        if (strpos($path, 'login.php') !== false) {
+                            $dest = '/book_list.php';
+                        }        
                         header("Location: {$dest}");
                     } else {
                         header("Location: book_list.php");
