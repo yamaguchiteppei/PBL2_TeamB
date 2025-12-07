@@ -3,6 +3,8 @@ session_start();
 
 $data_file = __DIR__ . '/users.json';
 
+$already_registered = false;
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -25,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         foreach ($users as $u) {
             if ($u['email'] === $email) {
                 $error = "このユーザーはすでに登録されています。";
+                $already_registered = true;
                 break;
             }
         }
@@ -114,7 +117,26 @@ EOT;
 
 <div class="register-card">
   <div class="register-header">
-    <button class="back-btn" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i> 戻る</button>
+<?php if (!empty($success)): ?>
+
+    <button class="back-btn" onclick="location.href='login.php'">
+        <i class="fa-solid fa-arrow-left"></i> ログインへ
+    </button>
+
+<?php elseif (!empty($already_registered)): ?>
+
+    <button class="back-btn" onclick="location.href='login.php'">
+        <i class="fa-solid fa-arrow-left"></i> ログインへ
+    </button>
+
+<?php else: ?>
+
+    <button class="back-btn" onclick="history.back()">
+        <i class="fa-solid fa-arrow-left"></i> 戻る
+    </button>
+
+<?php endif; ?>
+
     <h2><i class="fa-solid fa-user-plus"></i> 新規登録</h2>
   </div>
 
