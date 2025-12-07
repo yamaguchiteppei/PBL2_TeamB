@@ -7,10 +7,9 @@ body {
 
 /* ===== ナビゲーション ===== */
 header {
-  background: #004b97;
-  color: #fff;
+  background-color: #004b97;
+  color: white;
   padding: 0.8rem 2rem;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 .menu {
   display: flex;
@@ -19,23 +18,20 @@ header {
   gap: 1.2rem;
 }
 .menu button {
-  background: #fff;
+  background: white;
   color: #004b97;
   border: none;
   padding: 8px 20px;
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.25s;
+  transition: 0.2s;
 }
-.menu button:hover {
-  background: #e7edf9;
-  transform: translateY(-2px);
-}
+.menu button:hover { background: #e7edf9; }
 .menu .active {
   background: #004b97;
-  color: #fff;
-  border: 1px solid #fff;
+  color: white;
+  border: 1px solid white;
 }
 
 /* ===== レイアウト ===== */
@@ -145,7 +141,6 @@ h2 {
 .edit-btn { background-color: #2a72d4; color: white; }
 .delete-btn { background-color: #d9534f; color: white; }
 .message-btn { background-color: #28a745; color: white; }
-.detail-btn { background-color: #6c757d; color: white; }
 
 /* ===== その他 ===== */
 footer {
@@ -161,4 +156,82 @@ footer {
 @media (max-width: 900px) {
   .book-container { flex-direction: column; }
   .column + .column { border-left: none; border-top: 1px solid #ddd; }
+}
+
+.book-item {
+  position: relative; /* ← バッジを載せるために必要 */
+}
+.book-item.sold {
+  opacity: 1;
+}
+.available-btn {
+    background-color: #17a2b8; /* 青緑 */
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+.available-btn:hover {
+    background-color: #138496;
+}
+
+.sold-btn {
+    background-color: #6c757d;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+.sold-btn:hover {
+    background-color: #5a6268;
+}
+
+/* SOLD OUT ラベル */
+.sold-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(220, 53, 69, 0.9); /* 赤い半透明 */
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 4px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* SOLD のとき、編集ボタンと削除ボタンだけ無効化 */
+.book-item.sold .edit-btn,
+.book-item.sold .delete-btn {
+    pointer-events: none; /* ←クリック不可 */
+    background-color: #bbb; /* ←グレーアウト */
+}
+
+/* SOLD のときも「販売中に戻す」ボタンは有効にする */
+.book-item.sold .available-btn {
+    pointer-events: auto; /* ←クリック可能 */
+}
+
+/* --- SOLD でもカード全体の色は薄くしない --- */
+.book-item.sold {
+    opacity: 1;  /* ← 色そのまま */
+}
+
+/* --- SOLD のとき無効化したいボタン（色を薄くしてクリック不可） --- */
+.book-item.sold .edit-btn,
+.book-item.sold .delete-btn,
+.book-item.sold .message-btn,
+.book-item.sold .detail-btn {
+    opacity: 0.5;         /* 色を薄くする */
+    pointer-events: none; /* クリック不可 */
+}
+
+/* --- 「販売中に戻す」ボタンだけは通常のまま有効 --- */
+.book-item.sold .available-btn {
+    opacity: 1;
+    pointer-events: auto;
 }

@@ -75,8 +75,8 @@ EOT;
 
             $from_name = "愛媛大学yuzurinシステム";
             $from_encoded = mb_encode_mimeheader($from_name, "UTF-8", "B");
-
-            $headers = "From: {$from_encoded} <noreply@{$domain}>\r\n";
+            $server_host = $_SERVER['HTTP_HOST'];
+            $headers = "From: {$from_encoded} <noreply@{$server_host}>\r\n";
             $headers .= "MIME-Version: 1.0\r\n";
             $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
             $headers .= "Content-Transfer-Encoding: 8bit\r\n";
