@@ -41,7 +41,7 @@ if (isset($_POST['confirm'])) {
         'image'   => $imagePath,
         'faculty' => $faculty ?: '未選択',
         'price'   => ($tradeType === 'paid' && $price) ? "{$price}" : '0',
-        'seller'  => $seller
+        'seller'  => $seller,
         'sellerName' => $sellerName
     ];
 
