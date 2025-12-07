@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$data_file = __DIR__ . '/users.json';
+$data_file = __DIR__ . '/../users.json';
 
 if (!isset($_GET['token']) || trim($_GET['token']) === '') {
     exit("❌ 不正なアクセスです。メールのリンクからアクセスしてください。");
@@ -25,7 +25,7 @@ foreach ($users as &$user) {
         file_put_contents($data_file, json_encode($users, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
         $_SESSION['verified_message'] = "登録が完了しました。ログインしてください。";
-        header("Location: login.php");
+        header("Location: ../login.php");
         exit;
     }
 }

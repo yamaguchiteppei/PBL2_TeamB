@@ -40,9 +40,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ];
             file_put_contents($data_file, json_encode($users, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
-            $domain = $_SERVER['HTTP_HOST'];
-            $verify_link = "https://{$domain}/~k484yama/webpro/yuzurin2/verify.php?token={$token}";
+// ====== 認証URL生成（自動判定版） ======
 
+// 1. http or https を自動判定
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+
+// 2. ホスト名（localhost / example.com）
+$host = $_SERVER['HTTP_HOST'];
+
+// 3. スクリプトのディレクトリパスを取得（例：/yuzurin2）
+$scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+
+// 4. フルURLを生成（フォルダ構造も反映）
+$baseUrl = $scheme . "://" . $host . $scriptDir;
+
+// 5. verify.php のリンクを作成
+$verify_link = $baseUrl . "/php/verify.php?token={$token}";
             // ====== メール送信処理（日本語UTF-8固定） ======
             mb_language("Japanese");
             mb_internal_encoding("UTF-8");
