@@ -23,11 +23,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
 
                 if (password_verify($password, $user['password'])) {
+                    // セッション固定対策
+                    session_regenerate_id(true);
                     $_SESSION['user'] = [
                         'username' => $user['username'],
                         'email' => $user['email']
                     ];
-                    header("Location: book_list.php");
+                    // ログイン前に保存した遷移先があれば戻す（安全チェック付き）
+                    if (!empty($_SESSION['after_login_redirect'])) {
+                        $dest = $_SESSION['after_login_redirect'];
+                        unset($_SESSION['after_login_redirect']);
+
+                        // 安全確認：パス形式で始まる内部パスかを確認し、
+                        // login.php を含む場合や外部URLの疑いがある場合はフォールバックする
+                        $path = parse_url($dest, PHP_URL_PATH) ?: '';
+                        if (strpos($path, 'login.php') !== false || strpos($dest, '/') !== 0) {
+                            $dest = 'book_list.php';
+                        }
+                        header("Location: {$dest}");
+                    } else {
+                        header("Location: book_list.php");
+                    }
                     exit;
                 } else {
                     $error = "パスワードが正しくありません。";
@@ -66,6 +82,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <h2><i class="fa-solid fa-right-to-bracket"></i> ログイン</h2>
         <a href="register.php" class="register-link"><i class="fa-solid fa-user-plus"></i> 新規登録へ</a>
     </div>
+    
+    <?php if (!empty($_SESSION['flash'])): ?>
+        <div class="info-message"><?= htmlspecialchars($_SESSION['flash'], ENT_QUOTES, 'UTF-8') ?></div>
+        <?php unset($_SESSION['flash']); ?>
+    <?php endif; ?>
 
     <?php if (!empty($error)): ?>
         <div class="error-message"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
