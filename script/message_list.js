@@ -22,9 +22,15 @@ document.addEventListener("DOMContentLoaded", () => {
     item.addEventListener("click", () => {
       const s = item.dataset.seller;
       const b = item.dataset.book;
-      alert(`選択中: ${b} (${s})`);
+      window.location.href = `message_list.php?seller=${encodeURIComponent(s)}&book=${encodeURIComponent(b)}`;
     });
   });
   const btn = document.getElementById("sendBtn");
   if (btn) btn.addEventListener("click", sendMessage);
+  
+  // 選択されたチャットアイテムを自動スクロール
+  const activeItem = document.querySelector(".chat-item.active");
+  if (activeItem) {
+    activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 });
