@@ -44,7 +44,7 @@ foreach ($books as $index => $book) {
 
     <!-- 左：他者の教科書 -->
     <div class="column" id="colOthers">
-        <h2>📘 購入可能な教科書</h2>
+        
 
         <div class="search-bar">
             <div class="search-input-wrap">
