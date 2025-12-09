@@ -37,6 +37,9 @@ if (isset($_FILES['book_image']) && $_FILES['book_image']['error'] === UPLOAD_ER
 
 // ===== 3. 出品確定ボタンが押された時の処理 =====
 if (isset($_POST['confirm'])) {
+    $profileFile = __DIR__ . '/data/profiles/' . ($_SESSION['user']['username'] ?? '') . '.json';
+    $profile = file_exists($profileFile) ? json_decode(file_get_contents($profileFile), true): [];
+    $sellerName = $profile['display_name'] ?? ($_SESSION['user']['username'] ?? '名無し');
     $books_file = __DIR__ . '/books.json';
     $books = file_exists($books_file) ? json_decode(file_get_contents($books_file), true) : [];
 
@@ -56,6 +59,7 @@ if (isset($_POST['confirm'])) {
         'detail'      => $bookDetail, // ★追加
         'seller'      => $seller,
         'created_at'  => date('Y-m-d H:i:s')
+        'sellerName' => $sellerName
     ];
 
     // JSONへ追加して保存
