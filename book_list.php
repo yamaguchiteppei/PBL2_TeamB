@@ -80,7 +80,7 @@ foreach ($books as $index => $book) {
                     <div class="book-info">
                         <div class="book-title"><?= htmlspecialchars($title) ?></div>
                         <div class="book-faculty"><?= htmlspecialchars($faculty) ?></div>
-                        <div class="book-seller"><?= htmlspecialchars($sellerName) ?>（<?= htmlspecialchars($seller) ?>）</div>
+                        <div class="book-seller"><a href="view_profile.php?user=<?= urlencode($seller) ?>" style="color: inherit; text-decoration: none; cursor: pointer;"><u><?= htmlspecialchars($sellerName) ?>（<?= htmlspecialchars($seller) ?>）</u></a></div>
                         <div class="book-price">
                             <?= ($price === '' || $price === '0') ? '無料' : htmlspecialchars($price).'円' ?>
                         </div>
