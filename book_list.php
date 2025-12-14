@@ -151,10 +151,7 @@ foreach ($books as $index => $book) {
                                 <button class="edit-btn">✏️ 編集</button>
                             </form>
 
-                            <form action="book_delete.php" method="post" onsubmit="return confirm('本当に削除しますか？');">
-                                <input type="hidden" name="index" value="<?= $book['index'] ?>">
-                                <button class="delete-btn">🗑 削除</button>
-                            </form>
+
 
                             <form action="message_list.php" method="get">
                                 <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
