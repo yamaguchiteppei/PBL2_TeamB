@@ -1,7 +1,4 @@
 <?php
-require __DIR__ . '/php/auth.php';
-require_login();
-
 // ==== チャットログ読み込み ====
 $chat_file = __DIR__ . '/chat_log.json';
 if (!file_exists($chat_file)) file_put_contents($chat_file, json_encode([], JSON_UNESCAPED_UNICODE));
@@ -47,6 +44,7 @@ if (empty($book_image)) $book_image = 'images/sample_book.png';
 
 // ==== 取引中ユーザー一覧 ====
 $chats = [];
+$selected_chat = null; // 選択されたチャット情報を保持
 foreach ($chat_data as $key => $messages) {
     [$s_name, $s_book] = explode('_', $key, 2);
     $last_msg = end($messages);
@@ -114,7 +112,7 @@ if (empty($book_image_chat)) {
     $book_image_chat = 'images/sample_book.png';
 }
 
-    $chats[] = [
+    $chat_info = [
         'seller' => $s_name,
         'book' => $s_book,
         'avatar' => $avatar_path,
@@ -126,9 +124,44 @@ if (empty($book_image_chat)) {
         'is_sold' => $is_sold_chat,
         'book_image' => $book_image_chat 
     ];
+    
+    $chats[] = $chat_info;
+    
+    // 選択されたチャットの情報を保存
+    if ($key === $selected_key) {
+        $selected_chat = $chat_info;
+    }
 }
 
 usort($chats, fn($a, $b) => strcmp($b['time'], $a['time']));
+
+// 新規チャットの場合、選択された教科書をリストに追加
+if ($seller && $book && !$selected_chat) {
+    $profile_file = __DIR__ . "/data/profiles/{$seller}.json";
+    $display_name = $seller;
+    if (file_exists($profile_file)) {
+        $profile_data = json_decode(file_get_contents($profile_file), true);
+        if (!empty($profile_data['display_name'])) {
+            $display_name = $profile_data['display_name'];
+        }
+    }
+    $avatar_path = "uploads/avatars/avatar_" . preg_replace('/[^a-zA-Z0-9]/', '', $seller) . ".png";
+    if (!file_exists($avatar_path)) $avatar_path = "images/sample_avatar.png";
+    
+    $new_chat = [
+        'seller' => $seller,
+        'book' => $book,
+        'avatar' => $avatar_path,
+        'display_name' => $display_name,
+        'last_msg' => '',
+        'time' => date('Y-m-d H:i:s'),
+        'unread' => 0,
+        'key' => $selected_key
+    ];
+    // 先頭に追加
+    array_unshift($chats, $new_chat);
+    $selected_chat = $new_chat;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -175,7 +208,7 @@ usort($chats, fn($a, $b) => strcmp($b['time'], $a['time']));
                 <span class="unread-badge"><?= $chat['unread'] ?></span>
               <?php endif; ?>
             </div>
-            <div class="chat-preview"><?= htmlspecialchars($chat['last_msg']) ?></div>
+            <div class="chat-preview"><?= htmlspecialchars($chat['last_msg'] ?: 'メッセージを開始しましょう') ?></div>
           </div>
          
 
@@ -196,6 +229,34 @@ usort($chats, fn($a, $b) => strcmp($b['time'], $a['time']));
         <div style="display:flex;align-items:center;gap:8px;">
           <p style="margin:0;"><?= htmlspecialchars($seller) ?></p>
           <button id="reportChatBtn" class="report-btn header">通報</button>
+      <?php
+      // 新規チャットの場合でもアバターと表示名を取得
+      if (!$selected_chat && $seller) {
+        $profile_file = __DIR__ . "/data/profiles/{$seller}.json";
+        $display_name = $seller;
+        if (file_exists($profile_file)) {
+          $profile_data = json_decode(file_get_contents($profile_file), true);
+          if (!empty($profile_data['display_name'])) {
+            $display_name = $profile_data['display_name'];
+          }
+        }
+        $avatar_path = "uploads/avatars/avatar_" . preg_replace('/[^a-zA-Z0-9]/', '', $seller) . ".png";
+        if (!file_exists($avatar_path)) $avatar_path = "images/default.jpg";
+      } else if ($selected_chat) {
+        $display_name = $selected_chat['display_name'];
+        $avatar_path = $selected_chat['avatar'];
+      } else {
+        $display_name = $seller;
+        $avatar_path = "images/default.jpg";
+      }
+      ?>
+      <div class="chat-header">
+        <div class="chat-header-content">
+          <img src="<?= htmlspecialchars($avatar_path) ?>" class="chat-header-avatar" alt="avatar">
+          <div class="chat-header-info">
+            <h2><?= htmlspecialchars($book) ?></h2>
+            <p><?= htmlspecialchars($display_name) ?></p>
+          </div>
         </div>
       </div>
       <div class="chat-messages" id="chatMessages"></div>

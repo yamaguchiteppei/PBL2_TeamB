@@ -26,5 +26,12 @@
         "password": "$2y$10$QCYQTI2NfJjmPhs9t.1k5.EHEofL.VxBVRMyb9tRwHlBUB7IvOcyi",
         "token": "72c82f6c00efe70830e51fceb475e071",
         "verified": true
+    },
+    {
+        "username": "k520140u",
+        "email": "k520140u@mails.cc.ehime-u.ac.jp",
+        "password": "$2y$10$7QSNfuFMoFgENbMMz7A28e..CT\/AuGVG1HrdKgs4KYDc9Owe0QvFy",
+        "token": "d9d80b2b04bae244edb227750e2e6ee6",
+        "verified": true
     }
 ]

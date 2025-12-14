@@ -1,6 +1,11 @@
 <?php
-require __DIR__ . '/php/auth.php';
-require_login();
+session_start();
+
+// 🔐 ログイン確認
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit;
+}
 
 $sessionUser  = $_SESSION['user']['username'];
 $sessionEmail = $_SESSION['user']['email'];
@@ -139,7 +144,7 @@ $emailFull    = $username ? ($username . '@mails.cc.ehime-u.ac.jp') : '';
         <div class="form-group">
           <label><i class="fa-solid fa-envelope"></i> 愛媛大学メールアドレス</label>
           <div class="input-inline">
-            <input type="text" name="username" value="<?= $username ?>" placeholder="k000000x" readonly>
+            <input type="text" name="username" value="<?= $username ?>" readonly style="background-color: #e9ecef; cursor: not-allowed; color: #6c757d;">
             <span>@mails.cc.ehime-u.ac.jp</span>
           </div>
           <div class="hint">ユーザー名のみを入力してください。</div>

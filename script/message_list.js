@@ -257,6 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const b = item.dataset.book;
       const url = `message_list.php?seller=${encodeURIComponent(s)}&book=${encodeURIComponent(b)}`;
       location.href = url;
+      window.location.href = `message_list.php?seller=${encodeURIComponent(s)}&book=${encodeURIComponent(b)}`;
     });
   });
 
@@ -312,6 +313,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const book = header.dataset.book || (header.querySelector('h2')?.textContent.trim() || '');
     const seller = header.dataset.seller || (header.querySelector('p')?.textContent.trim() || '');
     if (book && seller) loadChat(seller, book);
+  
+  // 選択されたチャットアイテムを自動スクロール
+  const activeItem = document.querySelector(".chat-item.active");
+  if (activeItem) {
+    activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 });
 

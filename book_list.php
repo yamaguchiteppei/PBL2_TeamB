@@ -65,6 +65,7 @@ foreach ($books as $index => $book) {
                     $price = $book['price'] ?? '';
                     $seller = $book['seller'] ?? '不明';
                     $is_sold = ($book['status'] ?? 'active') === 'sold';
+                    $sellerName = $book['sellerName'] ?? '不明';
                 ?>
                 <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
                      data-group="others"
@@ -79,6 +80,7 @@ foreach ($books as $index => $book) {
                     <div class="book-info">
                         <div class="book-title"><?= htmlspecialchars($title) ?></div>
                         <div class="book-faculty"><?= htmlspecialchars($faculty) ?></div>
+                        <div class="book-seller"><a href="view_profile.php?user=<?= urlencode($seller) ?>" style="color: inherit; text-decoration: none; cursor: pointer;"><u><?= htmlspecialchars($sellerName) ?>（<?= htmlspecialchars($seller) ?>）</u></a></div>
                         <div class="book-price">
                             <?= ($price === '' || $price === '0') ? '無料' : htmlspecialchars($price).'円' ?>
                         </div>
@@ -123,6 +125,7 @@ foreach ($books as $index => $book) {
                     $price = $book['price'] ?? '';
                     $seller = $book['seller'] ?? $current_user;
                     $is_sold = ($book['status'] ?? 'active') === 'sold';
+                    $sellerName = $book['sellerName'] ?? 'current_user';
                 ?>
                 <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
                      data-group="mine"
@@ -137,6 +140,7 @@ foreach ($books as $index => $book) {
                     <div class="book-info">
                         <div class="book-title"><?= htmlspecialchars($title) ?></div>
                         <div class="book-faculty"><?= htmlspecialchars($faculty) ?></div>
+                        <div class="book-seller"><?= htmlspecialchars($sellerName) ?> （<?= htmlspecialchars($seller) ?>）</div>
                         <div class="book-price">
                             <?= ($price === '' || $price === '0') ? '無料' : htmlspecialchars($price).'円' ?>
                         </div>
