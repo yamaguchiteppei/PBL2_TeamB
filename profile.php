@@ -21,20 +21,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username     = trim($_POST['username'] ?? '');
     $faculty      = trim($_POST['faculty'] ?? '');
     $bio          = trim($_POST['bio'] ?? '');
-    $avatar_path  = $profile['avatar'] ?? 'images/sample_avatar.png';
+    $avatar_path  = $profile['avatar'] ?? 'images/default.jpg';
 
     // ===== アバター画像の保存処理 =====
     if (!empty($_FILES['avatar']['name'])) {
-        $upload_dir = __DIR__ . '/data/avatars';
-        if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
+      // 他の場所と揃えて uploads/avatars に保存する
+      $upload_dir = __DIR__ . '/uploads/avatars';
+      if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
 
-        $ext = pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION);
-        $new_name = $sessionUser . '.' . $ext;
-        $target = $upload_dir . '/' . $new_name;
+      $ext = pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION);
+      // ファイル名は他と同様に avatar_{username}.png 形式に統一
+      $new_name = 'avatar_' . $sessionUser . '.' . $ext;
+      $target = $upload_dir . '/' . $new_name;
 
-        if (move_uploaded_file($_FILES['avatar']['tmp_name'], $target)) {
-            $avatar_path = 'data/avatars/' . $new_name;
-        }
+      if (move_uploaded_file($_FILES['avatar']['tmp_name'], $target)) {
+        $avatar_path = 'uploads/avatars/' . $new_name;
+      }
     }
 
     // ===== JSONに保存 =====
@@ -56,7 +58,7 @@ $display_name = htmlspecialchars($profile['display_name'] ?? '名無し', ENT_QU
 $username     = htmlspecialchars($profile['username'] ?? $sessionUser, ENT_QUOTES, 'UTF-8');
 $faculty      = htmlspecialchars($profile['faculty'] ?? '', ENT_QUOTES, 'UTF-8');
 $bio          = htmlspecialchars($profile['bio'] ?? '', ENT_QUOTES, 'UTF-8');
-$avatar       = htmlspecialchars($profile['avatar'] ?? 'images/sample_avatar.png', ENT_QUOTES, 'UTF-8');
+$avatar       = htmlspecialchars($profile['avatar'] ?? 'images/default.jpg', ENT_QUOTES, 'UTF-8');
 $emailFull    = $username ? ($username . '@mails.cc.ehime-u.ac.jp') : '';
 ?>
 <!DOCTYPE html>
@@ -137,7 +139,7 @@ $emailFull    = $username ? ($username . '@mails.cc.ehime-u.ac.jp') : '';
         <div class="form-group">
           <label><i class="fa-solid fa-envelope"></i> 愛媛大学メールアドレス</label>
           <div class="input-inline">
-            <input type="text" name="username" value="<?= $username ?>" placeholder="k000000x">
+            <input type="text" name="username" value="<?= $username ?>" placeholder="k000000x" readonly>
             <span>@mails.cc.ehime-u.ac.jp</span>
           </div>
           <div class="hint">ユーザー名のみを入力してください。</div>

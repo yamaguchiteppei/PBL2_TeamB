@@ -4,6 +4,27 @@
         "email": "k520484x@mails.cc.ehime-u.ac.jp",
         "password": "$2y$10$ik9nySRlUPBBK0\/pZihvMe9kFogoiz1GbcppTwCX4H5JXiPreVrvG",
         "token": "086088f709e6c0d5440638e887106550",
-        "verified": false
+        "verified": true
+    },
+    {
+        "username": "k520140u",
+        "email": "k520140u@mails.cc.ehime-u.ac.jp",
+        "password": "$2y$10$M5\/2HyNcEOogwlpSOT3oIeLbRV56jnvCHpxCTALwyvO9DMsZadgHO",
+        "token": "28589baed732c46a9b8f9c68df82b952",
+        "verified": true
+    },
+    {
+        "username": "k520111b",
+        "email": "k520111b@mails.cc.ehime-u.ac.jp",
+        "password": "$2y$10$ik9nySRlUPBBK0\/pZihvMe9kFogoiz1GbcppTwCX4H5JXiPreVrvG",
+        "token": "72b765774f87fe5563b77b8816353e08",
+        "verified": true
+    },
+    {
+        "username": "abcdefgh",
+        "email": "abcdefgh@mails.cc.ehime-u.ac.jp",
+        "password": "$2y$10$QCYQTI2NfJjmPhs9t.1k5.EHEofL.VxBVRMyb9tRwHlBUB7IvOcyi",
+        "token": "72c82f6c00efe70830e51fceb475e071",
+        "verified": true
     }
 ]

@@ -52,21 +52,26 @@ header {
 /* 左リスト */
 .chat-list {
   width: 35%;
-  background: #f9fafb;
-  border-right: 1px solid #ddd;
+  background: #eaf3ff;
+  border-right: 1px solid #cfe1fb;
   padding: 20px;
   overflow-y: auto;
+}
+.chat-list h3 {
+  color: #004b97;
+  margin-top: 0;
+  margin-bottom: 12px;
 }
 .chat-item {
   display: flex;
   align-items: center;
-  background: #fff;
+  background: #f4f9ff;
   border-radius: 10px;
-  padding: 14px;
+  padding: 12px;
   margin-bottom: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(12, 48, 86, 0.06);
   cursor: pointer;
-  transition: transform 0.25s, box-shadow 0.25s;
+  transition: transform 0.18s, box-shadow 0.18s;
 }
 .chat-item:hover {
   transform: translateY(-3px) scale(1.02);
@@ -74,27 +79,38 @@ header {
 }
 .chat-item.active {
   border: 2px solid #004b97;
-  background: #eef3ff;
+  background: #e6f0ff;
 }
 .chat-avatar {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 12px;
-  border: 2px solid #ddd;
+  margin-right: 10px;
+  border: 1px solid #cfe7ff;
+}
+/* 教科書サムネイル（ヘッダー） */
+.book-thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #cfe7ff;
 }
 .chat-info {
-  flex: 1;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden;
+  min-width: 0;
   font-size: 1rem;
 }
 .chat-book {
-  font-weight: bold;
-  color: #222;
-  font-size: 1.1rem;
+  font-weight: 700;
+  color: #004b97;
+  font-size: 1.05rem;
 }
 .chat-seller {
-  color: #555;
+  color: #1f6fbf;
   font-size: 0.95rem;
 }
 .chat-preview {
@@ -106,7 +122,7 @@ header {
 }
 .unread-badge {
   display: inline-block;
-  background: #d9534f;
+  background: #0077cc;
   color: white;
   border-radius: 50%;
   width: 20px;
@@ -128,32 +144,24 @@ header {
   color: #fff;
   padding: 18px 30px;
 }
-.chat-messages {
-  flex-grow: 1;
-  padding: 25px;
-  overflow-y: auto;
-  background: #f8f9fb;
-  display: flex;
-  flex-direction: column;
-}
-.message {
-  margin-bottom: 12px;
-  padding: 14px 18px;
-  border-radius: 14px;
-  max-width: 70%;
-  font-size: 1rem;
-  line-height: 1.5;
-}
-.message.sent {
-  background: #004b97;
+/* 売却済みバッジ */
+.sold-badge {
+  display: inline-block;
+  background: #d9534f;
   color: #fff;
-  align-self: flex-end;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-left: 10px;
 }
-.message.received {
-  background: #e7edf9;
-  color: #000;
-  align-self: flex-start;
+/* 小さいバッジ（左カラム用） */
+.sold-badge.small{
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  margin-left: 6px;
+  vertical-align: middle;
 }
+
 .chat-input {
   display: flex;
   border-top: 1px solid #ccc;
@@ -179,6 +187,39 @@ header {
 #sendBtn:hover {
   background: #2a72d4;
 }
+/* disabled styles */
+#messageInput[disabled] {
+  background: #f0f0f0;
+  color: #888;
+}
+#sendBtn[disabled] {
+  background: #999;
+  cursor: not-allowed;
+}
+/* 通報ボタン */
+.report-btn {
+  background: transparent;
+  border: 1px solid #d9534f;
+  color: #d9534f;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.report-btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+/* ヘッダー用通報ボタンの調整 */
+.report-btn.header {
+  border-color: #fff;
+  color: #fff;
+  background: rgba(255,255,255,0.12);
+  padding: 6px 10px;
+}
+.report-btn.header[disabled] {
+  opacity: 0.5;
+}
 
 /* モバイル */
 @media (max-width: 768px) {
@@ -189,4 +230,153 @@ header {
   .chat-screen {
     width: 100%;
   }
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 左右に分ける */
+    overflow: hidden !important;
+    gap: 12px !important;
+    min-height: 60px !important;
+}
+
+.chat-book-thumb {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+    object-fit: cover !important;
+    border-radius: 4px;
+}
+
+.chat-item img.chat-book-thumb {
+    width: 40px !important;
+    height: 40px !important;
+
+    min-width: 40px !important;
+    min-height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+    object-fit: cover !important;
+
+    flex: 0 0 auto !important; 
+    display: block !important;
+}
+
+/* chat-item 内の img が大きくならないように最優先で固定 */
+.chat-item img {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+    object-fit: cover !important;
+    border-radius: 4px;
+}
+
+.chat-list img {
+    width: 40px !important;
+    height: 40px !important;
+    object-fit: cover !important;
+    border-radius: 4px;
+}
+
+.chat-list > img {
+    display: none !important;
+}
+
+.chat-list {
+    background-image: none !important;
+}
+
+.message-bubble {
+  padding: 12px 16px;
+  border-radius: 12px;
+  max-width: 70%;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.message-bubble.other {
+  background: #ffffff;
+  border: 1px solid #ddd;
+}
+
+
+/* === 吹き出し外の時間 === */
+.msg-time {
+  font-size: 0.75rem;
+  color: #777;
+  margin: 0 6px;
+}
+
+.msg-time.other {
+  margin-left: 6px;
+}
+
+.msg-time.me {
+  margin-right: 6px;
+}
+
+/* === チャット全体 === */
+.chat-messages {
+  flex-grow: 1;
+  padding: 25px;
+  overflow-y: auto;
+  background: #f8f9fb;
+  display: flex;
+  flex-direction: column;
+}
+.row {
+  display: flex;
+  align-items: flex-end;   /* ← ここを flex-end から center に変更 */
+  margin-bottom: 12px;
+}
+
+.row.other {
+  flex-direction: row;
+}
+
+.row.me {
+  flex-direction: row-reverse;
+}
+
+/* === アバター === */
+.chat-avatar-small {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.message-bubble.me {
+  background: #cce4ff;
+  border-color: #99c8ff;
+}
+
+/* === メッセージ上の送信者名 === */
+.sender-name {
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+  font-weight: bold;
+  color: #444;
+}
+
+/* === メッセージ本文 === */
+.message-text {
+  font-size: 1rem;
+  white-space: pre-wrap;
+}
+
+
+/* === 日付区切り（今日 / 昨日 / yyyy-mm-dd） === */
+.date-separator {
+  text-align: center;
+  margin: 18px 0;
+  font-size: 0.9rem;
+  color: #666;
 }
