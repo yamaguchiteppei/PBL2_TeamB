@@ -4,6 +4,7 @@ $chat_file = __DIR__ . '/chat_log.json';
 if (!file_exists($chat_file)) file_put_contents($chat_file, json_encode([], JSON_UNESCAPED_UNICODE));
 $chat_data = json_decode(file_get_contents($chat_file), true) ?? [];
 
+
 // ==== GETパラメータ ====
 $seller = $_GET['seller'] ?? '';
 $book   = $_GET['book'] ?? '';
