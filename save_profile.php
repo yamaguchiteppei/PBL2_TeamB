@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+file_put_contents(
+    __DIR__ . "/debug.log",
+    date('Y-m-d H:i:s') . " send_message called\n",
+    FILE_APPEND
+);
+
+
 // 🔐 ログイン確認
 if (!isset($_SESSION['user'])) {
     header("Location: login.php");

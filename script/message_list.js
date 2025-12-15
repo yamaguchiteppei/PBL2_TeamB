@@ -148,6 +148,8 @@ messages.forEach(m => {
   }
 }
 
+
+
 // ==== メッセージ送信 ====
 async function sendMessage() {
   const input = document.getElementById("messageInput");
@@ -318,6 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const activeItem = document.querySelector(".chat-item.active");
   if (activeItem) {
     activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
   }
 });
 

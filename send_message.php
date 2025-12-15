@@ -13,8 +13,8 @@ if (!file_exists($chat_file)) {
 $chat_data = json_decode(file_get_contents($chat_file), true) ?? [];
 
 // POSTデータの受信
-$seller = $_POST['seller'] ?? '';
-$book   = $_POST['book'] ?? '';
+$seller  = $_POST['seller'] ?? '';
+$book    = $_POST['book'] ?? '';
 $message = trim($_POST['message'] ?? '');
 
 if ($seller === '' || $book === '' || $message === '') {
@@ -25,8 +25,10 @@ if ($seller === '' || $book === '' || $message === '') {
 // 自分のアカウント
 $me = $_SESSION['user']['username'];
 
-// キー
+// キー（message_list.php と完全一致させる）
 $key = "{$seller}_{$book}";
+
+// 🔴 念のため存在保証（chat_init.php があってもOK）
 if (!isset($chat_data[$key])) {
     $chat_data[$key] = [];
 }
@@ -43,6 +45,12 @@ $new_message = [
 $chat_data[$key][] = $new_message;
 
 // JSON へ保存
-file_put_contents($chat_file, json_encode($chat_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+file_put_contents(
+    $chat_file,
+    json_encode($chat_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+);
 
-echo json_encode(["status" => "success"]);
+echo json_encode([
+    "status" => "success",
+    "message" => $new_message
+]);

@@ -171,7 +171,7 @@ header {
 /* 売却済みバッジ */
 .sold-badge {
   display: inline-block;
-  background: #d9534f;
+  background: #d9534f;}
 .chat-header-content {
   display: flex;
   align-items: center;
@@ -446,4 +446,110 @@ header {
   margin: 18px 0;
   font-size: 0.9rem;
   color: #666;
+}
+.date-separator span {
+  background: #e0e0e0;
+  padding: 4px 12px;
+  border-radius: 12px;
+}     
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mark-sold-btn {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.mark-sold-btn:hover {
+    background-color: #c0392b;
+}
+
+.seller-name {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.seller-name {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* ヘッダー用 共通ボタン */
+.header-action-btn {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.header-action-btn:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* 状態別 */
+.header-action-btn.sold {
+  background: #d9534f;
+  border-color: #d9534f;
+}
+
+.header-action-btn.available {
+  background: #28a745;
+  border-color: #28a745;
+}
+
+.header-action-btn.report {
+  background: rgba(255,255,255,0.12);
+}
+.seller-profile-link {
+    color: #ffffff;          /* 白色 */
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.seller-profile-link:hover {
+    opacity: 0.85;
+}
+.book-detail-link {
+    color: #ffffff;              /* 白色 */
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.book-detail-link:hover {
+    opacity: 0.85;
 }
