@@ -58,7 +58,7 @@ if (isset($_POST['confirm'])) {
         'course'      => $course,     // ★追加
         'detail'      => $bookDetail, // ★追加
         'seller'      => $seller,
-        'created_at'  => date('Y-m-d H:i:s')
+        'created_at'  => date('Y-m-d H:i:s'),
         'sellerName' => $sellerName
     ];
 
