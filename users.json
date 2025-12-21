@@ -5,5 +5,12 @@
         "password": "$2y$10$bhTz2tpC2B4trqpomnan7udG40erANOvBJdXHWZ9O2uiRjFMk09Ha",
         "token": "2740de79499cdd35a7f4dbe878b8bcd1",
         "verified": true
+    },
+    {
+        "username": "k520007a",
+        "email": "k520007a@mails.cc.ehime-u.ac.jp",
+        "password": "$2y$10$PP2\/zkiqhKNyAlVZltp9d.szvXrtTYDaFEOU8oOGm\/A5PJmiDknv6",
+        "token": "9c374d2ec2879baf01fe7ea0915f75d5",
+        "verified": true
     }
 ]

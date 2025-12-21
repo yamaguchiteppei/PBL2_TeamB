@@ -27,6 +27,7 @@ require_login();
 <h2 class="page-title">📚 教科書出品フォーム</h2>
 
 <form action="book_confirm.php" method="post" enctype="multipart/form-data">
+    
     <div class="form-group">
         <label>・教科書名 <span class="required">*必須</span></label>
         <input type="text" name="book_name" placeholder="ここに入力" required>
@@ -43,7 +44,7 @@ require_login();
             <label><input type="radio" name="trade" value="free" checked> 無償提供（OK!）</label><br>
             <label><input type="radio" name="trade" value="paid"> 有償取引を希望</label>
 
-            <div id="priceField">
+            <div id="priceField" style="display: none; margin-top: 10px;">
                 <span> 希望価格：</span>
                 <input type="number" name="price" min="0" step="100" placeholder="例：1000"> 円
             </div>
@@ -51,66 +52,38 @@ require_login();
     </div>
 
     <div class="form-group">
-            <label>・使用した学部</label>
-            <select name="faculty">
-                <option value="">選択する</option>
-                <option>共通教育</option>
-                <option>法文学部</option>
-                <option>教育学部</option>
-                <option>社会共創学部</option>
-                <option>理学部</option>
-                <option>工学部</option>
-                <option>医学部</option>
-                <option>農学部</option>
-            </select>
-        </div>
+        <label>・使用した学部</label>
+        <select name="faculty" id="faculty_select">
+            <option value="">選択してください</option>
+            <option value="共通教育">共通教育</option>
+            <option value="法文学部">法文学部</option>
+            <option value="教育学部">教育学部</option>
+            <option value="社会共創学部">社会共創学部</option>
+            <option value="理学部">理学部</option>
+            <option value="工学部">工学部</option>
+            <option value="医学部">医学部</option>
+            <option value="農学部">農学部</option>
+        </select>
+    </div>
 
-        <div class="form-group">
-            <label>・学科</label>
-            <select name="faculty">
-                <option value="">選択する</option>
-                <option>人文社会学科</option>
-                <option>学校教育教員養成課程</option>
-                <option>産業マネジメント学科</option>
-                <option>産業イノベーション学科</option>
-                <option>環境デザイン学科</option>
-                <option>地域資源マネジメント学科</option>
-                <option>理学科</option>
-                <option>医学科</option>
-                <option>看護学科</option>
-                <option>工学科</option>
-                <option>食料生産学科</option>
-                <option>生命機能学科</option>
-                <option>生物環境学科</option>
-            </select>
-        </div>
+    <div class="form-group">
+        <label>・学科</label>
+        <select name="department" id="department_select" disabled>
+            <option value="">学部を選択してください</option>
+        </select>
+    </div>
 
-        <div class="form-group">
-            <label>・コース</label>
-            <select name="faculty">
-                <option value="">選択する</option>
-                <option>法学・政策学履修コース</option>
-                <option>グローバル・スタディーズ履修コース</option>
-                <option>人文学履修コース</option>
-                <option>教育発達実践コース</option>
-                <option>初等中等教科コース</option>
-                <option>数学・数理情報コース</option>
-                <option>物理学コース</option>
-                <option>化学コース</option>
-                <option>生物学コース</option>
-                <option>地学コース</option>
-                <option>機械⼯学コース</option>
-                <option>知能システム学コース</option>
-                <option>電気電子⼯学コース</option>
-                <option>コンピュータ科学コース</option>
-                <option>応用情報工学コース</option>
-                <option>材料デザイン工学コース</option>
-                <option>化学・生命科学コース</option>
-                <option>社会基盤工学コース</option>
-                <option>社会デザインコース</option>
-            </select>
-        </div>
+    <div class="form-group">
+        <label>・コース</label>
+        <select name="course" id="course_select" disabled>
+            <option value="">学科を選択してください</option>
+        </select>
+    </div>
 
+    <div class="form-group">
+        <label>・詳細情報（任意）</label>
+        <textarea name="book_detail" rows="5" placeholder="例:表紙に書き込みがあります。" style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
+    </div>
 
     <button type="submit" class="submit-btn">確認</button>
 </form>
