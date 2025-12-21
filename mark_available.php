@@ -1,16 +1,34 @@
 <?php
-session_start();
+require __DIR__ . '/php/auth.php';
+require_login();
 
-$index = intval($_POST['index']);
+$seller = $_POST['seller'] ?? '';
+$book   = $_POST['book'] ?? '';
+
+if ($seller === '' || $book === '') {
+    header("Location: message_list.php");
+    exit;
+}
 
 $file = __DIR__ . '/books.json';
-$books = json_decode(file_get_contents($file), true);
+$books = json_decode(file_get_contents($file), true) ?? [];
 
-// ステータス変更
-$books[$index]['status'] = 'available';
+/* 対象の教科書を探す */
+foreach ($books as &$b) {
+    if (
+        ($b['seller'] ?? '') === $seller &&
+        ($b['title'] ?? '') === $book
+    ) {
+        $b['status'] = 'active';
+        break;
+    }
+}
 
-// 保存
-file_put_contents($file, json_encode($books, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+file_put_contents(
+    $file,
+    json_encode($books, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+);
 
-header("Location: book_list.php");
+/* チャット画面に戻す */
+header("Location: message_list.php?seller=" . urlencode($seller) . "&book=" . urlencode($book));
 exit;

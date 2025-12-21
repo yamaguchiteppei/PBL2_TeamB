@@ -59,6 +59,12 @@ foreach ($books as $index => $book) {
             <p style="text-align:center; color:#666;">現在、購入できる教科書はありません。</p>
         <?php else: ?>
             <?php foreach ($other_books as $book): ?>
+            <?php
+    $image_path = 'images/sample_book.png';
+    if (!empty($book['image']) && file_exists(__DIR__ . '/' . $book['image'])) {
+        $image_path = $book['image'];
+    }
+?>    
                 <?php
                     $title = $book['title'] ?? '';
                     $faculty = $book['faculty'] ?? '';
@@ -80,17 +86,17 @@ foreach ($books as $index => $book) {
                     <div class="book-info">
                         <div class="book-title"><?= htmlspecialchars($title) ?></div>
                         <div class="book-faculty"><?= htmlspecialchars($faculty) ?></div>
-                        <div class="book-seller"><?= htmlspecialchars($sellerName) ?>（<?= htmlspecialchars($seller) ?>）</div>
+                        <div class="book-seller"><a href="view_profile.php?user=<?= urlencode($seller) ?>" style="color: inherit; text-decoration: none; cursor: pointer;"><u><?= htmlspecialchars($sellerName) ?>（<?= htmlspecialchars($seller) ?>）</u></a></div>
                         <div class="book-price">
                             <?= ($price === '' || $price === '0') ? '無料' : htmlspecialchars($price).'円' ?>
                         </div>
 
                         <div class="action-buttons">
-                            <form action="message_list.php" method="get">
-                                <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
-                                <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
-                                <button type="submit" class="message-btn">💬 メッセージ</button>
-                            </form>
+                        <form action="chat_init.php" method="get">
+    <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
+    <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
+    <button type="submit" class="message-btn">💬 メッセージ</button>
+</form>
 
                             <button onclick="location.href='book_detail.php?index=<?= $book['index'] ?>'" class="detail-btn">
                                 📖 詳細
@@ -119,6 +125,12 @@ foreach ($books as $index => $book) {
             <p style="text-align:center; color:#666;">まだ出品していません。</p>
         <?php else: ?>
             <?php foreach ($my_books as $book): ?>
+                <?php
+    $image_path = 'images/sample_book.png';
+    if (!empty($book['image']) && file_exists(__DIR__ . '/' . $book['image'])) {
+        $image_path = $book['image'];
+    }
+?>
                 <?php
                     $title = $book['title'] ?? '';
                     $faculty = $book['faculty'] ?? '';
@@ -151,12 +163,9 @@ foreach ($books as $index => $book) {
                                 <button class="edit-btn">✏️ 編集</button>
                             </form>
 
-                            <form action="book_delete.php" method="post" onsubmit="return confirm('本当に削除しますか？');">
-                                <input type="hidden" name="index" value="<?= $book['index'] ?>">
-                                <button class="delete-btn">🗑 削除</button>
-                            </form>
 
-                            <form action="message_list.php" method="get">
+
+                            <form action="chat_init.php" method="get">
                                 <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
                                 <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
                                 <button type="submit" class="message-btn">💬 メッセージ</button>
