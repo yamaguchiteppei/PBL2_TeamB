@@ -235,3 +235,34 @@ footer {
     opacity: 1;
     pointer-events: auto;
 }
+/* =========================
+   共通ヘッダーメニュー
+   ========================= */
+.menu {
+    display: flex;
+    gap: 12px;
+}
+
+.menu button {
+    height: 42px;              /* ← 高さを統一 */
+    padding: 0 18px;           /* ← 横幅を揃える */
+    font-size: 14px;           /* ← 文字サイズ統一 */
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #004b97;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* hover */
+.menu button:hover {
+    background-color: #e6f0ff;
+}
+
+/* 選択中（active） */
+.menu button.active {
+    background-color: #004b97;
+    color: #ffffff;
+}

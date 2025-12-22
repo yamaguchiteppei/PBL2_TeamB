@@ -1,18 +1,32 @@
 <?php
-session_start();
+require __DIR__ . '/php/auth.php';
+require_login();
 
-$index = intval($_POST['index']);
+$seller = $_POST['seller'] ?? '';
+$book   = $_POST['book'] ?? '';
 
-// 読み込み
+if ($seller === '' || $book === '') {
+    header("Location: message_list.php");
+    exit;
+}
+
 $file = __DIR__ . '/books.json';
-$books = json_decode(file_get_contents($file), true);
+$books = json_decode(file_get_contents($file), true) ?? [];
 
-// ステータス変更
-$books[$index]['status'] = 'sold';
+foreach ($books as &$b) {
+    if (
+        ($b['seller'] ?? '') === $seller &&
+        ($b['title'] ?? '') === $book
+    ) {
+        $b['status'] = 'sold';
+        break;
+    }
+}
 
-// 保存
-file_put_contents($file, json_encode($books, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+file_put_contents(
+    $file,
+    json_encode($books, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+);
 
-// 完了後 book_list へ
-header("Location: book_list.php");
+header("Location: message_list.php?seller=" . urlencode($seller) . "&book=" . urlencode($book));
 exit;

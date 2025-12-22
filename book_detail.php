@@ -49,15 +49,29 @@ $price_display = ($price === '0' || $price === '') ? '無償提供（無料）' 
 <script src="https://kit.fontawesome.com/a4f2e2c2ef.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<?php
-// ★共通ヘッダー・ナビゲーションのインクルード (include/header_nav.php が必要)
-// 参照ファイルが見つからない場合は、この行をコメントアウトし、<header>タグの内容を直接貼り付けてください。
-include __DIR__ . '/include/header_nav.php'; 
-?>
+<header>
+<nav class="menu">
+    <button onclick="location.href='book_list.php'">
+        購入画面
+    </button>
+    <button onclick="location.href='book_upload.php'">
+        出品
+    </button>
+    <button onclick="location.href='message_list.php'">
+        メッセージ
+    </button>
+    <button onclick="location.href='login.php'">
+        ログイン
+    </button>
+    <button onclick="location.href='profile.php'">
+        プロフィール
+    </button>
+</nav>
+</header>
 
 <div class="detail-container">
-    <button class="back-to-list-btn" onclick="location.href='book_list.php'">
-        &larr; 一覧に戻る
+<button class="back-to-list-btn" onclick="history.back()">
+    &larr; 戻る
     </button>
     
     <div class="book-header">
