@@ -53,6 +53,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 
+<header>
+    <nav class="menu">
+        <button class="active" onclick="location.href='book_list.php'">購入画面</button>
+        <button onclick="location.href='book_upload.php'">出品</button>
+        <button onclick="location.href='message_list.php'">メッセージ</button>
+        <button onclick="location.href='login.php'">ログイン</button>
+        <button onclick="location.href='profile.php'">プロフィール</button>
+    </nav>
+</header>
+
 <h2 class="page-title">📘 教科書情報の編集</h2>
 
 <form method="post" enctype="multipart/form-data">
