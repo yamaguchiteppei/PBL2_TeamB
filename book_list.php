@@ -73,9 +73,10 @@ foreach ($books as $index => $book) {
                     $is_sold = ($book['status'] ?? 'active') === 'sold';
                     $sellerName = $book['sellerName'] ?? '不明';
                 ?>
-                <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
+                 <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
                      data-group="others"
-                     data-search="<?= htmlspecialchars(mb_strtolower($title.' '.$faculty.' '.$price)) ?>">
+                     data-search="<?= htmlspecialchars(mb_strtolower($title.' '.$faculty.' '.$price)) ?>"
+                     data-detail-url="book_detail.php?index=<?= $book['index'] ?>">
 
                     <?php if ($is_sold): ?>
                         <div class="sold-badge">SOLD OUT</div>
@@ -97,10 +98,6 @@ foreach ($books as $index => $book) {
     <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
     <button type="submit" class="message-btn">💬 メッセージ</button>
 </form>
-
-                            <button onclick="location.href='book_detail.php?index=<?= $book['index'] ?>'" class="detail-btn">
-                                📖 詳細
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -139,9 +136,10 @@ foreach ($books as $index => $book) {
                     $is_sold = ($book['status'] ?? 'active') === 'sold';
                     $sellerName = $book['sellerName'] ?? 'current_user';
                 ?>
-                <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
+                 <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
                      data-group="mine"
-                     data-search="<?= htmlspecialchars(mb_strtolower($title.' '.$faculty.' '.$price)) ?>">
+                     data-search="<?= htmlspecialchars(mb_strtolower($title.' '.$faculty.' '.$price)) ?>"
+                     data-detail-url="book_detail.php?index=<?= $book['index'] ?>">
 
                     <?php if ($is_sold): ?>
                         <div class="sold-badge">SOLD OUT</div>
@@ -170,10 +168,6 @@ foreach ($books as $index => $book) {
                                 <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
                                 <button type="submit" class="message-btn">💬 メッセージ</button>
                             </form>
-
-                            <button onclick="location.href='book_detail.php?index=<?= $book['index'] ?>'" class="detail-btn">
-                                📖 詳細
-                            </button>
 
                             <?php if ($is_sold): ?>
                                 <form action="mark_available.php" method="post" onsubmit="return confirm('販売中に戻しますか？');">
