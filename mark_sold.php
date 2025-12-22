@@ -28,5 +28,13 @@ file_put_contents(
     json_encode($books, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
 );
 
-header("Location: message_list.php?seller=" . urlencode($seller) . "&book=" . urlencode($book));
+// AJAXリクエストならJSONで応答、それ以外は従来通りリダイレクト
+if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['success' => true, 'index' => $index, 'status' => 'sold']);
+    exit;
+}
+
+// 完了後 book_list へ
+header("Location: book_list.php");
 exit;

@@ -2,6 +2,36 @@
     {
         "id": "693e7817f0521",
         "title": "線形代数入門",
+        "image": "uploads\/1765695895_ダウンロード.jpeg",
+        "faculty": "応用情報工学コース",
+        "price": "0",
+        "seller": "k520484x",
+        "status": "sold"
+    },
+    {
+        "title": "微積分５",
+        "image": "images\/sample_book.jpg",
+        "faculty": "共通教育",
+        "price": "0",
+        "seller": "k520111b"
+    },
+    {
+        "title": "線形代数７",
+        "image": "images\/sample_book.jpg",
+        "faculty": "法学・政策学履修コース",
+        "price": "0",
+        "seller": "k520140u"
+    },
+    {
+        "title": "微積分",
+        "image": "images\/sample_book.jpg",
+        "faculty": "共通教育",
+        "price": "0",
+        "seller": "k520111b"
+    },
+    {
+        "id": "69363e7d8e067",
+        "title": "微積分a",
         "image": "images\/sample_book.jpg",
         "trade_type": "free",
         "price": 0,

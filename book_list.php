@@ -136,10 +136,9 @@ foreach ($books as $index => $book) {
                     $is_sold = ($book['status'] ?? 'active') === 'sold';
                     $sellerName = $book['sellerName'] ?? 'current_user';
                 ?>
-                 <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
+                <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
                      data-group="mine"
-                     data-search="<?= htmlspecialchars(mb_strtolower($title.' '.$faculty.' '.$price)) ?>"
-                     data-detail-url="book_detail.php?index=<?= $book['index'] ?>">
+                     data-search="<?= htmlspecialchars(mb_strtolower($title.' '.$faculty.' '.$price)) ?>">
 
                     <?php if ($is_sold): ?>
                         <div class="sold-badge">SOLD OUT</div>
@@ -175,7 +174,7 @@ foreach ($books as $index => $book) {
                                     <button class="available-btn">🔄 販売中に戻す</button>
                                 </form>
                             <?php else: ?>
-                                <form action="mark_sold.php" method="post" onsubmit="return confirm('この教科書を売却済みにしますか？');">
+                                <form class="mark-sold-form" acition="mark_sold.php" method="post" onsubmit="return confirm('この教科書を売却済みにしますか？');">
                                     <input type="hidden" name="index" value="<?= $book['index'] ?>">
                                     <button class="sold-btn">✔️ 売却済みにする</button>
                                 </form>
