@@ -87,7 +87,26 @@ tryLoadAvatar();
     : "";
   row.appendChild(time);
 
+  // --- 通報ボタン（自分のメッセージ以外） ---
+  if (!isMe) {
+    const reportBtn = document.createElement("button");
+    reportBtn.className = "message-report-btn";
+    reportBtn.innerHTML = "⚠️";
+    reportBtn.title = "このメッセージを通報";
+    reportBtn.setAttribute("data-seller", msg.sender || "");
+    reportBtn.setAttribute("data-text", msg.text || "");
+    reportBtn.setAttribute("data-time", msg.time || "");
+    reportBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      handleMessageReport(reportBtn, msg);
+    });
+    row.appendChild(reportBtn);
+  }
+
   div.appendChild(row);
+  div.className = "message-wrapper";
+  div.setAttribute("data-sender", msg.sender || "");
+  div.setAttribute("data-time", msg.time || "");
 
   const container = document.getElementById("chatMessages");
   container.appendChild(div);
@@ -148,6 +167,8 @@ messages.forEach(m => {
   }
 }
 
+
+
 // ==== メッセージ送信 ====
 async function sendMessage() {
   const input = document.getElementById("messageInput");
@@ -160,8 +181,8 @@ async function sendMessage() {
   // seller / book 情報を DOM から取得
   const header = document.querySelector('.chat-header');
   // 優先: data-* 属性（売却バッジなどで textContent が変わるのを避ける）
-  const book = header ? (header.dataset.book || (header.querySelector('h2')?.textContent.trim() || '')) : '';
-  const seller = header ? (header.dataset.seller || (header.querySelector('p')?.textContent.trim() || '')) : '';
+  const book = header ? (header.dataset.book || (header.querySelector('.chat-book-title')?.textContent.trim() || '')) : '';
+  const seller = header ? (header.dataset.seller || (header.querySelector('.seller-account')?.textContent.match(/（(.+)）/)?.[1] || '')) : '';
   if (!seller || !book) {
     console.warn('送信先情報がありません');
     if (btn) btn.disabled = false;
@@ -209,10 +230,57 @@ addMessage({ text, time: tempTime, sender: CURRENT_USER, is_me: true });
   }
 }
 
+// ==== メッセージ通報処理（個別メッセージ用） ====
+function handleMessageReport(buttonEl, msg) {
+  // sellerとbookを取得
+  const header = document.querySelector('.chat-header');
+  if (!header) {
+    alert('チャット情報が取得できません');
+    return;
+  }
+  
+  // data属性から取得（優先）
+  const book = header.dataset.book || (header.querySelector('.chat-book-title')?.textContent.trim() || '');
+  const seller = header.dataset.seller || (header.querySelector('.seller-account')?.textContent.match(/（(.+)）/)?.[1] || '');
+  
+  if (!seller || !book) {
+    alert('チャット情報が取得できません');
+    return;
+  }
+
+  // 確認ダイアログ
+  const confirmMsg = `このメッセージを通報しますか？\n\n送信者: ${msg.sender || '不明'}\n内容: ${(msg.text || '').substring(0, 50)}${(msg.text || '').length > 50 ? '...' : ''}`;
+  if (!confirm(confirmMsg)) {
+    return;
+  }
+
+  // 通報理由を入力（オプション）
+  const reason = prompt('通報理由を入力してください（任意）:');
+  if (reason === null) return; // キャンセル
+
+  // UI更新
+  buttonEl.disabled = true;
+  buttonEl.textContent = '送信中...';
+  buttonEl.style.opacity = '0.6';
+
+  // 通報実行
+  reportMessage(seller, book, msg.text || '', msg.time || '', msg.sender || '', buttonEl, reason || '')
+    .then(() => {
+      buttonEl.textContent = '通報済み';
+      buttonEl.style.opacity = '0.5';
+    })
+    .catch((e) => {
+      console.error('通報エラー', e);
+      buttonEl.disabled = false;
+      buttonEl.innerHTML = '⚠️';
+      buttonEl.style.opacity = '1';
+    });
+}
+
 // ==== 通報処理 ====
-async function reportMessage(seller, book, text, time, original_sender, buttonEl) {
+async function reportMessage(seller, book, text, time, original_sender, buttonEl, reason = '') {
   try {
-    const body = `action=report&seller=${encodeURIComponent(seller)}&book=${encodeURIComponent(book)}&text=${encodeURIComponent(text)}&time=${encodeURIComponent(time)}&original_sender=${encodeURIComponent(original_sender)}`;
+    const body = `action=report&seller=${encodeURIComponent(seller)}&book=${encodeURIComponent(book)}&text=${encodeURIComponent(text)}&time=${encodeURIComponent(time)}&original_sender=${encodeURIComponent(original_sender)}&reason=${encodeURIComponent(reason)}`;
     const res = await fetch('message_api.php', {
       method: 'POST',
       credentials: 'same-origin',
@@ -232,10 +300,12 @@ async function reportMessage(seller, book, text, time, original_sender, buttonEl
         buttonEl.disabled = true;
       }
     } else {
-      alert('通報に失敗しました');
+      const errorMsg = data.msg || '不明なエラー';
+      console.error('通報エラー:', errorMsg, data);
+      alert('通報に失敗しました: ' + errorMsg);
       if (buttonEl) {
         buttonEl.disabled = false;
-        buttonEl.textContent = '通報';
+        buttonEl.textContent = '⚠️';
       }
     }
   } catch (e) {
@@ -257,7 +327,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const b = item.dataset.book;
       const url = `message_list.php?seller=${encodeURIComponent(s)}&book=${encodeURIComponent(b)}`;
       location.href = url;
-      window.location.href = `message_list.php?seller=${encodeURIComponent(s)}&book=${encodeURIComponent(b)}`;
     });
   });
 
@@ -282,10 +351,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const headerReport = document.getElementById('reportChatBtn');
   if (headerReport) {
     headerReport.addEventListener('click', () => {
-      const headerBook = document.querySelector('.chat-header h2');
-      const headerSeller = document.querySelector('.chat-header p');
-      const book = headerBook ? headerBook.textContent.trim() : '';
-      const seller = headerSeller ? headerSeller.textContent.trim() : '';
+      const header = document.querySelector('.chat-header');
+      if (!header) {
+        alert('チャット情報が取得できません');
+        return;
+      }
+      // data属性から取得（優先）
+      const book = header.dataset.book || (header.querySelector('.chat-book-title')?.textContent.trim() || '');
+      const seller = header.dataset.seller || (header.querySelector('.seller-account')?.textContent.match(/（(.+)）/)?.[1] || '');
       if (!seller || !book) {
         alert('対象チャットが特定できません');
         return;
@@ -294,11 +367,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const text = prompt('通報するメッセージの本文を入力してください（空欄ならアカウント通報）');
       if (text === null) return; // キャンセル
       const original_sender = prompt('通報対象の発言者のユーザー名を入力してください（不明なら空欄）');
+      const reason = prompt('通報理由を入力してください（任意）:');
+      if (reason === null) return; // キャンセル
       // UI フィードバック
       headerReport.disabled = true;
       headerReport.textContent = '送信中...';
-      console.log('通報送信開始', {seller, book, text, original_sender});
-      reportMessage(seller, book, text || '', '', original_sender || '', headerReport).then(() => {
+      console.log('通報送信開始', {seller, book, text, original_sender, reason});
+      reportMessage(seller, book, text || '', '', original_sender || '', headerReport, reason || '').then(() => {
         console.log('通報送信完了');
       }).catch((e) => {
         console.error('reportMessage で例外', e);
@@ -310,14 +385,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // ページに seller/book が存在する場合は履歴を読み込む
   const header = document.querySelector('.chat-header');
   if (header) {
-    const book = header.dataset.book || (header.querySelector('h2')?.textContent.trim() || '');
-    const seller = header.dataset.seller || (header.querySelector('p')?.textContent.trim() || '');
+    // data属性から取得（優先）
+    const book = header.dataset.book || (header.querySelector('.chat-book-title')?.textContent.trim() || '');
+    const seller = header.dataset.seller || (header.querySelector('.seller-account')?.textContent.match(/（(.+)）/)?.[1] || '');
     if (book && seller) loadChat(seller, book);
   
   // 選択されたチャットアイテムを自動スクロール
   const activeItem = document.querySelector(".chat-item.active");
   if (activeItem) {
     activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
   }
 });
 

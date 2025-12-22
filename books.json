@@ -1,5 +1,6 @@
 [
     {
+        "id": "693e7817f0521",
         "title": "線形代数入門",
         "image": "uploads\/1765695895_ダウンロード.jpeg",
         "faculty": "応用情報工学コース",
@@ -34,11 +35,56 @@
         "image": "images\/sample_book.jpg",
         "trade_type": "free",
         "price": 0,
-        "faculty": "教育学部",
-        "department": "学校教育教員養成課程",
-        "course": "教育発達実践コース",
-        "detail": "あああああ",
+        "faculty": "工学部",
+        "department": "",
+        "course": "",
+        "detail": "",
+        "seller": "k520484x",
+        "created_at": "2025-12-14 17:40:55",
+        "sellerName": "山口哲平",
+        "status": "sold"
+    },
+    {
+        "id": "693e810f2f958",
+        "title": "システム英単語",
+        "image": "images\/sample_book.jpg",
+        "trade_type": "paid",
+        "price": 2000,
+        "faculty": "工学部",
+        "department": "",
+        "course": "",
+        "detail": "",
         "seller": "k520111b",
-        "created_at": "2025-12-08 11:57:01"
+        "created_at": "2025-12-14 18:19:11",
+        "sellerName": "奥山颯太",
+        "status": "active"
+    },
+    {
+        "id": "693e8e45d5998",
+        "title": "システム英単語",
+        "image": "images\/sample_book.jpg",
+        "trade_type": "free",
+        "price": 0,
+        "faculty": "工学部",
+        "department": "",
+        "course": "",
+        "detail": "システム英単語じゃないよー！",
+        "seller": "k520484x",
+        "created_at": "2025-12-14 19:15:33",
+        "sellerName": "山口哲平"
+    },
+    {
+        "id": "693f69c6f1d0d",
+        "title": "線形代数入門",
+        "image": "images\/sample_book.jpg",
+        "trade_type": "free",
+        "price": 0,
+        "faculty": "工学部",
+        "department": "工学科",
+        "course": "",
+        "detail": "kaaaaaaaaaaaaaa",
+        "seller": "abcdefgh",
+        "created_at": "2025-12-15 10:52:06",
+        "sellerName": "abcdefgh"
     }
 ]
