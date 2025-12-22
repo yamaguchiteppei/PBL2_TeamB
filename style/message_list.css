@@ -439,6 +439,55 @@ header {
   white-space: pre-wrap;
 }
 
+/* === メッセージラッパー === */
+.message-wrapper {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.message-wrapper:hover .message-report-btn {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* === メッセージ通報ボタン === */
+.message-report-btn {
+  background: rgba(217, 83, 79, 0.1);
+  border: 1px solid #d9534f;
+  color: #d9534f;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 24px;
+}
+
+.message-report-btn:hover {
+  background: rgba(217, 83, 79, 0.2);
+  border-color: #c9302c;
+  color: #c9302c;
+  transform: scale(1.1);
+}
+
+.message-report-btn:active {
+  transform: scale(0.95);
+}
+
+.message-report-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(217, 83, 79, 0.05);
+}
+
 
 /* === 日付区切り（今日 / 昨日 / yyyy-mm-dd） === */
 .date-separator {

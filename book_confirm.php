@@ -59,7 +59,7 @@ if (isset($_POST['confirm'])) {
         'detail'      => $bookDetail, // ★追加
         'seller'      => $seller,
         'created_at'  => date('Y-m-d H:i:s'),
-        'sellerName' => $sellerName
+        'sellerName'  => $sellerName
     ];
 
     // JSONへ追加して保存
