@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 body {
   font-family: "Noto Sans JP", sans-serif;
   background-color: #f5f6f8;
@@ -5,36 +7,52 @@ body {
   padding: 0;
 }
 
-/* ===== ナビゲーション ===== */
+/* =========================================
+   ヘッダー & ナビゲーション
+   (book_upload.css の仕様に統一)
+   ========================================= */
 header {
-  background-color: #004b97;
-  color: white;
+  background: #004b97;
+  color: #fff;
   padding: 0.8rem 2rem;
+  /* アップロード画面に合わせて影を追加 */
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
+
 .menu {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1.2rem; /* gapを合わせる */
 }
+
 .menu button {
-  background: white;
+  background: #fff;
   color: #004b97;
   border: none;
-  padding: 8px 20px;
+  padding: 8px 20px; /* パディングを合わせる */
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s;
-}
-.menu button:hover { background: #e7edf9; }
-.menu .active {
-  background: #004b97;
-  color: white;
-  border: 1px solid white;
+  transition: 0.25s; /* トランジションを合わせる */
 }
 
-/* ===== レイアウト ===== */
+/* ホバー時に少し浮き上がる動きを追加 */
+.menu button:hover {
+  background: #e7edf9;
+  transform: translateY(-2px);
+}
+
+/* 選択中（active） */
+.menu .active {
+  background: #004b97;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+/* =========================================
+   メインレイアウト
+   ========================================= */
 .book-container {
   display: flex;
   max-width: 1100px;
@@ -44,30 +62,49 @@ header {
   box-shadow: 0 3px 10px rgba(0,0,0,0.1);
   overflow: hidden;
 }
+
 .column {
   flex: 1;
   padding: 25px;
 }
+
+/* 2カラム目の左側に線を入れる */
 .column + .column {
   border-left: 1px solid #ddd;
 }
+
 h2 {
   color: #004b97;
   text-align: center;
   margin-bottom: 10px;
 }
 
-/* ===== 検索バー ===== */
+/* レスポンシブ対応（スマホ時） */
+@media (max-width: 900px) {
+  .book-container {
+    flex-direction: column;
+  }
+  .column + .column {
+    border-left: none;
+    border-top: 1px solid #ddd;
+  }
+}
+
+/* =========================================
+   検索バー
+   ========================================= */
 .search-bar {
   margin: 10px 0 20px;
   display: flex;
   justify-content: center;
 }
+
 .search-input-wrap {
   position: relative;
   width: 100%;
   max-width: 400px;
 }
+
 .search-input-wrap input[type="text"] {
   width: 100%;
   padding: 10px 36px 10px 12px;
@@ -75,6 +112,7 @@ h2 {
   border-radius: 8px;
   font-size: 0.95rem;
 }
+
 .clear-btn {
   position: absolute;
   right: 8px;
@@ -87,8 +125,11 @@ h2 {
   color: #666;
 }
 
-/* ===== 教科書カード ===== */
+/* =========================================
+   教科書カード (Book Item)
+   ========================================= */
 .book-item {
+  position: relative; /* バッジ配置用 */
   display: flex;
   align-items: flex-start;
   background: #f9fafb;
@@ -99,11 +140,13 @@ h2 {
   transition: 0.25s;
   flex-wrap: wrap;
 }
+
 .book-item:hover {
   background: #f0f5ff;
   transform: translateY(-2px);
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
 }
+
 .book-image {
   width: 70px;
   height: 70px;
@@ -112,23 +155,41 @@ h2 {
   border: 1px solid #ccc;
   margin-right: 10px;
 }
+
 .book-info {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
-.book-title { font-weight: bold; color: #222; font-size: 1.05rem; }
-.book-faculty { color: #555; font-size: 0.9rem; }
-.book-price { font-weight: bold; color: #004b97; margin-top: 4px; }
 
-/* ===== ボタン ===== */
+.book-title {
+  font-weight: bold;
+  color: #222;
+  font-size: 1.05rem;
+}
+
+.book-faculty {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.book-price {
+  font-weight: bold;
+  color: #004b97;
+  margin-top: 4px;
+}
+
+/* =========================================
+   ボタン類
+   ========================================= */
 .action-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 8px;
 }
+
 .action-buttons button {
   border: none;
   border-radius: 6px;
@@ -138,11 +199,69 @@ h2 {
   font-weight: bold;
   transition: all 0.25s ease;
 }
+
+/* 通常時のボタン色 */
 .edit-btn { background-color: #2a72d4; color: white; }
 .delete-btn { background-color: #d9534f; color: white; }
 .message-btn { background-color: #28a745; color: white; }
 
-/* ===== その他 ===== */
+/* 販売ステータス変更ボタン */
+.available-btn {
+  background-color: #17a2b8; /* 青緑 */
+  color: white;
+}
+.available-btn:hover { background-color: #138496; }
+
+.sold-btn {
+  background-color: #6c757d;
+  color: white;
+}
+.sold-btn:hover { background-color: #5a6268; }
+
+
+/* =========================================
+   SOLD OUT (売り切れ) 状態のスタイル
+   ========================================= */
+/* バッジ本体 */
+.sold-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(220, 53, 69, 0.9); /* 赤の半透明 */
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 4px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* SOLD時のカード全体 */
+.book-item.sold {
+  opacity: 1;
+}
+
+/* SOLD時の無効化ボタン */
+.book-item.sold .edit-btn,
+.book-item.sold .delete-btn,
+.book-item.sold .message-btn,
+.book-item.sold .detail-btn {
+  opacity: 0.5;
+  pointer-events: none;
+  background-color: #bbb;
+}
+
+/* SOLD時でも「販売中に戻す」ボタンだけは有効 */
+.book-item.sold .available-btn {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* =========================================
+   フッター・その他
+   ========================================= */
 footer {
   text-align: center;
   margin-top: 30px;
@@ -150,119 +269,6 @@ footer {
   font-size: 0.85rem;
   padding-bottom: 20px;
 }
+
 .hidden { display: none !important; }
 .nohit { text-align: center; color: #666; }
-
-@media (max-width: 900px) {
-  .book-container { flex-direction: column; }
-  .column + .column { border-left: none; border-top: 1px solid #ddd; }
-}
-
-.book-item {
-  position: relative; /* ← バッジを載せるために必要 */
-}
-.book-item.sold {
-  opacity: 1;
-}
-.available-btn {
-    background-color: #17a2b8; /* 青緑 */
-    color: white;
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-}
-.available-btn:hover {
-    background-color: #138496;
-}
-
-.sold-btn {
-    background-color: #6c757d;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-}
-.sold-btn:hover {
-    background-color: #5a6268;
-}
-
-/* SOLD OUT ラベル */
-.sold-badge {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background: rgba(220, 53, 69, 0.9); /* 赤い半透明 */
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 6px 10px;
-    border-radius: 4px;
-    z-index: 10;
-    pointer-events: none;
-}
-
-/* SOLD のとき、編集ボタンと削除ボタンだけ無効化 */
-.book-item.sold .edit-btn,
-.book-item.sold .delete-btn {
-    pointer-events: none; /* ←クリック不可 */
-    background-color: #bbb; /* ←グレーアウト */
-}
-
-/* SOLD のときも「販売中に戻す」ボタンは有効にする */
-.book-item.sold .available-btn {
-    pointer-events: auto; /* ←クリック可能 */
-}
-
-/* --- SOLD でもカード全体の色は薄くしない --- */
-.book-item.sold {
-    opacity: 1;  /* ← 色そのまま */
-}
-
-/* --- SOLD のとき無効化したいボタン（色を薄くしてクリック不可） --- */
-.book-item.sold .edit-btn,
-.book-item.sold .delete-btn,
-.book-item.sold .message-btn,
-.book-item.sold .detail-btn {
-    opacity: 0.5;         /* 色を薄くする */
-    pointer-events: none; /* クリック不可 */
-}
-
-/* --- 「販売中に戻す」ボタンだけは通常のまま有効 --- */
-.book-item.sold .available-btn {
-    opacity: 1;
-    pointer-events: auto;
-}
-/* =========================
-   共通ヘッダーメニュー
-   ========================= */
-.menu {
-    display: flex;
-    gap: 12px;
-}
-
-.menu button {
-    height: 42px;              /* ← 高さを統一 */
-    padding: 0 18px;           /* ← 横幅を揃える */
-    font-size: 14px;           /* ← 文字サイズ統一 */
-    font-weight: 600;
-    border: none;
-    border-radius: 6px;
-    background-color: #ffffff;
-    color: #004b97;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-/* hover */
-.menu button:hover {
-    background-color: #e6f0ff;
-}
-
-/* 選択中（active） */
-.menu button.active {
-    background-color: #004b97;
-    color: #ffffff;
-}

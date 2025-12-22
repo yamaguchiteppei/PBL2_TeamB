@@ -86,5 +86,63 @@
         "seller": "abcdefgh",
         "created_at": "2025-12-15 10:52:06",
         "sellerName": "abcdefgh"
+    },
+    {
+        "id": "6948a7fac26ed",
+        "title": "bisekibunn",
+        "image": "images\/sample_book.jpg",
+        "trade_type": "free",
+        "price": 0,
+        "faculty": "工学部",
+        "department": "工学科",
+        "course": "コンピュータ科学コース",
+        "detail": "waaa",
+        "seller": "k520111b",
+        "created_at": "2025-12-22 11:07:54",
+        "sellerName": "奥山颯太"
+    },
+    {
+        "id": "6948a9f92cd53",
+        "title": "biseki2",
+        "image": "images\/20251222111622_スクリーンショット 2025-12-12 001448.png",
+        "trade_type": "free",
+        "price": 0,
+        "faculty": "",
+        "department": null,
+        "course": null,
+        "detail": "",
+        "seller": "k520111b",
+        "created_at": "2025-12-22 11:16:25",
+        "sellerName": "奥山颯太",
+        "trade": "free"
+    },
+    {
+        "id": "6948af90b42f8",
+        "title": "せんけい",
+        "image": "images\/20251222114013_スクリーンショット 2025-12-12 003209.png",
+        "trade_type": "free",
+        "price": 0,
+        "faculty": "",
+        "department": null,
+        "course": null,
+        "detail": "",
+        "seller": "k520111b",
+        "created_at": "2025-12-22 11:40:16",
+        "sellerName": "奥山颯太",
+        "trade": "paid"
+    },
+    {
+        "id": "6948b16b1b2dd",
+        "title": "new せんけい",
+        "image": "images\/20251222114809_スクリーンショット 2025-12-12 143028.png",
+        "trade_type": "free",
+        "price": 0,
+        "faculty": "社会共創学部",
+        "department": "環境デザイン学科",
+        "course": "",
+        "detail": "",
+        "seller": "k520111b",
+        "created_at": "2025-12-22 11:48:11",
+        "sellerName": "奥山颯太"
     }
 ]

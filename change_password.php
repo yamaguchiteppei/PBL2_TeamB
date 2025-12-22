@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username'])) {
 
             // === メール本文 ===
             $domain = $_SERVER['HTTP_HOST'];
-            $reset_link = "https://{$domain}/~k484yama/webpro/yuzurin1/change_password_confirm.php?token={$token}";
+            $reset_link = "https://{$domain}/~k111okuy/pbl2/PBL2_TeamB/change_password_confirm.php?token={$token}";
             $email = $user['email'];
 
             $subject = "【愛媛大学yuzurinプロジェクト】パスワード再設定メール";

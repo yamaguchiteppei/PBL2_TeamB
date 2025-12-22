@@ -42,7 +42,6 @@ foreach ($books as $index => $book) {
 
 <div class="book-container">
 
-    <!-- 左：他者の教科書 -->
     <div class="column" id="colOthers">
         <h2>📘 購入可能な教科書</h2>
 
@@ -72,12 +71,19 @@ foreach ($books as $index => $book) {
                     $seller = $book['seller'] ?? '不明';
                     $is_sold = ($book['status'] ?? 'active') === 'sold';
                     $sellerName = $book['sellerName'] ?? '不明';
-                ?>
-                 <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
-                     data-group="others"
-                     data-search="<?= htmlspecialchars(mb_strtolower($title.' '.$faculty.' '.$price)) ?>"
-                     data-detail-url="book_detail.php?index=<?= $book['index'] ?>">
 
+                    // ▼▼▼ 修正箇所：価格が0または空なら、検索用ワードに「無料」を追加 ▼▼▼
+                    $search_keywords = $title . ' ' . $faculty . ' ' . $price;
+                    if ($price === '' || $price === '0') {
+                        $search_keywords .= ' 無料 ';
+                    }
+                    // ▲▲▲▲▲▲
+                ?>
+                 <div class="book-item <?= $is_sold ? 'sold' : '' ?>" 
+                      data-group="others" 
+                      data-search="<?= htmlspecialchars(mb_strtolower($search_keywords)) ?>"
+                      data-detail-url="book_detail.php?index=<?= $book['index'] ?>">
+                      
                     <?php if ($is_sold): ?>
                         <div class="sold-badge">SOLD OUT</div>
                     <?php endif; ?>
@@ -89,7 +95,7 @@ foreach ($books as $index => $book) {
                         <div class="book-faculty"><?= htmlspecialchars($faculty) ?></div>
                         <div class="book-seller"><a href="view_profile.php?user=<?= urlencode($seller) ?>" style="color: inherit; text-decoration: none; cursor: pointer;"><u><?= htmlspecialchars($sellerName) ?>（<?= htmlspecialchars($seller) ?>）</u></a></div>
                         <div class="book-price">
-                            <?= ($price === '' || $price === '0') ? '無料' : htmlspecialchars($price).'円' ?>
+                            <?= ($price == 0) ? '無料' : htmlspecialchars($price).'円' ?>
                         </div>
 
                         <div class="action-buttons">
@@ -105,9 +111,8 @@ foreach ($books as $index => $book) {
         <?php endif; ?>
     </div>
 
-    <!-- 右：自分の出品 -->
     <div class="column" id="colMine">
-        <h2>📗 自分の出品教科書</h2>
+        <h2>📘 自分の出品教科書</h2>
 
         <div class="search-bar">
             <div class="search-input-wrap">
@@ -135,10 +140,17 @@ foreach ($books as $index => $book) {
                     $seller = $book['seller'] ?? $current_user;
                     $is_sold = ($book['status'] ?? 'active') === 'sold';
                     $sellerName = $book['sellerName'] ?? 'current_user';
+
+                    // ▼▼▼ 修正箇所：価格が0または空なら、検索用ワードに「無料」を追加 ▼▼▼
+                    $search_keywords = $title . ' ' . $faculty . ' ' . $price;
+                    if ($price === '' || $price === '0') {
+                        $search_keywords .= ' 無料';
+                    }
+                    // ▲▲▲▲▲▲
                 ?>
-                <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
-                     data-group="mine"
-                     data-search="<?= htmlspecialchars(mb_strtolower($title.' '.$faculty.' '.$price)) ?>">
+                <div class="book-item <?= $is_sold ? 'sold' : '' ?>" 
+                      data-group="mine" 
+                      data-search="<?= htmlspecialchars(mb_strtolower($search_keywords)) ?>">
 
                     <?php if ($is_sold): ?>
                         <div class="sold-badge">SOLD OUT</div>
@@ -151,7 +163,7 @@ foreach ($books as $index => $book) {
                         <div class="book-faculty"><?= htmlspecialchars($faculty) ?></div>
                         <div class="book-seller"><?= htmlspecialchars($sellerName) ?> （<?= htmlspecialchars($seller) ?>）</div>
                         <div class="book-price">
-                            <?= ($price === '' || $price === '0') ? '無料' : htmlspecialchars($price).'円' ?>
+                            <?= ($price == 0) ? '無料' : htmlspecialchars($price).'円' ?>
                         </div>
 
                         <div class="action-buttons">
@@ -159,9 +171,7 @@ foreach ($books as $index => $book) {
                                 <input type="hidden" name="index" value="<?= $book['index'] ?>">
                                 <button class="edit-btn">✏️ 編集</button>
                             </form>
-
-
-
+                           
                             <form action="chat_init.php" method="get">
                                 <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
                                 <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
