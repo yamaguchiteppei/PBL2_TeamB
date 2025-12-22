@@ -16,9 +16,11 @@
     {
         "username": "k520111b",
         "email": "k520111b@mails.cc.ehime-u.ac.jp",
-        "password": "$2y$10$ik9nySRlUPBBK0\/pZihvMe9kFogoiz1GbcppTwCX4H5JXiPreVrvG",
+        "password": "$2y$10$ik9nySRlUPBBK0pZihvMe9kFogoiz1GbcppTwCX4H5JXiPreVrvG",
         "token": "72b765774f87fe5563b77b8816353e08",
-        "verified": true
+        "verified": true,
+        "reset_token": "e4202af3f66465ff62c3e87c3d60b94f",
+        "reset_expires": 1766371312
     },
     {
         "username": "abcdefgh",
