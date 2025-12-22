@@ -31,7 +31,9 @@ $faculty = htmlspecialchars($book['faculty'] ?? '学部情報なし');
 $price = $book['price'] ?? '0';
 $seller = htmlspecialchars($book['seller'] ?? '不明');
 // 説明文（description）がない場合は空文字列をデフォルト値とする
-$description = htmlspecialchars($book['description'] ?? '特に説明はありません。'); 
+// 元の1行を消して、以下の2行に置き換えます
+$detail_raw = $book['detail'] ?? ''; 
+$description = ($detail_raw !== '') ? htmlspecialchars($detail_raw) : '特に説明はありません。';
 $status = $book['status'] ?? 'active';
 $is_sold = $status === 'sold';
 
