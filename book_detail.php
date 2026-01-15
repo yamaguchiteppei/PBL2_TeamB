@@ -111,13 +111,13 @@ $price_display = ($price === '0' || $price === '') ? '無償提供（無料）' 
                 ✏️ 編集する
             </button>
         <?php elseif (!$is_sold): ?>
-            <form action="message_list.php" method="get" style="display:inline;">
-                <input type="hidden" name="seller" value="<?= $seller ?>">
-                <input type="hidden" name="book" value="<?= $title ?>">
-                <button type="submit" class="action-btn message-btn">
-                    💬 出品者に連絡（購入を相談する）
-                </button>
-            </form>
+<form action="chat_init.php" method="post" style="display:inline;">
+    <input type="hidden" name="seller" value="<?= htmlspecialchars($seller, ENT_QUOTES, 'UTF-8') ?>">
+    <input type="hidden" name="book" value="<?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?>">
+    <button type="submit" class="action-btn message-btn">
+        💬 出品者に連絡（購入を相談する）
+    </button>
+</form>
         <?php else: ?>
             <p class="sold-message">この教科書は既に売却済みです。</p>
         <?php endif; ?>
