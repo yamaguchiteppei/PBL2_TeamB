@@ -132,7 +132,7 @@ $real_buyer = ($real_seller === $s_name) ? $b_name : $s_name;
 
     /* アバター */
     $safe_name = preg_replace('/[^a-zA-Z0-9]/', '', $partner);
-    $avatar_path = "images/sample_avatar.png";
+    $avatar_path = "images/default.jpg";
     foreach (['png', 'jpg', 'jpeg'] as $ext) {
         $path = "uploads/avatars/avatar_{$safe_name}.{$ext}";
         if (file_exists(__DIR__ . '/' . $path)) {
