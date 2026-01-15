@@ -48,7 +48,7 @@ foreach ($books as $index => $book) {
 
         <div class="search-bar">
             <div class="search-input-wrap">
-                <input id="searchOthers" type="text" placeholder="教科書名・ 学部・価格で検索..." autocomplete="off" />
+                <input id="searchOthers" type="text" placeholder="教科書名で検索..." autocomplete="off" />
                 <button id="clearOthers" class="clear-btn" aria-label="clear">✕</button>
             </div>
         </div>
