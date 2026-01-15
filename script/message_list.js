@@ -221,6 +221,8 @@ addMessage({ text, time: tempTime, sender: CURRENT_USER, is_me: true });
     if (data.status === 'ok') {
       // 成功：入力欄をクリア
       input.value = '';
+      location.reload();
+  return;
     } else {
       // 失敗：追加した要素を削除して通知
       if (addedEl && addedEl.parentNode) addedEl.parentNode.removeChild(addedEl);
