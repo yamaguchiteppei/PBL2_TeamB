@@ -10,6 +10,12 @@ function parseTime(t) {
   return new Date(t);
 }
 
+function makeKey(seller, buyer, book) {
+  const users = [seller, buyer].sort();
+  return `${users[0]}_${users[1]}_${book}`;
+}
+
+
 
 // ==== 日付の区切りを追加 ====
 function addDateSeparator(dateText) {
@@ -120,8 +126,8 @@ tryLoadAvatar();
 
 
 // ==== チャット履歴読み込み ====
-async function loadChat(seller, book) {
-  const key = `${seller}_${book}`;
+async function loadChat(seller,buyer,book) {
+  const key = makeKey(seller, buyer, book);
   try {
     const res = await fetch(`message_api.php?load_chat=${encodeURIComponent(key)}`, { credentials: 'same-origin' });
     if (!res.ok) return;
@@ -323,10 +329,17 @@ async function reportMessage(seller, book, text, time, original_sender, buttonEl
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".chat-item").forEach((item) => {
     item.addEventListener("click", () => {
-      const s = item.dataset.seller;
-      const b = item.dataset.book;
-      const url = `message_list.php?seller=${encodeURIComponent(s)}&book=${encodeURIComponent(b)}`;
-      location.href = url;
+        const seller = item.dataset.seller;
+        const book = item.dataset.book;
+        const chatKey = item.dataset.chatKey;
+
+        // 右カラムの情報を更新
+        const chatHeader = document.querySelector('.chat-header');
+        const chatMessages = document.getElementById('chatMessages');
+
+        // ここで AJAX で chat_log.json を取得するか
+        // PHP 側に reload させるため location.href = ? でもOK
+        window.location.href = `message_list.php?seller=${encodeURIComponent(seller)}&book=${encodeURIComponent(book)}&chat_key=${encodeURIComponent(chatKey)}`;
     });
   });
 
@@ -388,7 +401,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // data属性から取得（優先）
     const book = header.dataset.book || (header.querySelector('.chat-book-title')?.textContent.trim() || '');
     const seller = header.dataset.seller || (header.querySelector('.seller-account')?.textContent.match(/（(.+)）/)?.[1] || '');
-    if (book && seller) loadChat(seller, book);
+    const buyer = header.dataset.buyer;
+    if (book && seller && buyer) loadChat(seller,buyer,book);
   
   // 選択されたチャットアイテムを自動スクロール
   const activeItem = document.querySelector(".chat-item.active");

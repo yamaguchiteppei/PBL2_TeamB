@@ -1,12 +1,7 @@
 <?php
 require __DIR__ . '/php/auth.php';
 // 簡易デバッグ: 受信内容をログに残す（開発時のみ）
-$debug_log = __DIR__ . '/message_api_debug.log';
-@file_put_contents($debug_log, "----\n" . date('c') . "\nMETHOD: " . ($_SERVER['REQUEST_METHOD'] ?? '') . "\nUSER: " . json_encode(current_user()) . "\nPOST: " . json_encode($_POST) . "\nGET: " . json_encode($_GET) . "\nCOOKIE: " . json_encode($_COOKIE) . "\n", FILE_APPEND);
-// API はログイン済みが前提（通報などの操作で使用）
-// API はログイン済みが前提だが、AJAX から呼ばれる可能性があるため
-// 未ログイン時はページ遷移（login.php へのリダイレクト）を起こさず
-// JSON でエラーを返す。これによりフロントで適切にハンドリングできる。
+
 if (!is_logged_in()) {
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(["status" => "error", "msg" => "not_logged_in"]);
@@ -27,7 +22,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'report_chat') {
 
     $seller = trim($_POST['seller'] ?? '');
+    $buyer  = $_SESSION['user']['username'];
     $book   = trim($_POST['book'] ?? '');
+    $message = trim($_POST['message'] ?? '');
+
+    $u1 = $seller;
+$u2 = $buyer;
+$users = [$u1, $u2];
+sort($users, SORT_STRING);
+
+$key = "{$users[0]}_{$users[1]}_{$book}";
+
     $reason = trim($_POST['reason'] ?? '');
 
     if ($seller === '' || $book === '') {
@@ -90,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 通常のメッセージ送信
     $seller  = trim($_POST['seller'] ?? '');
+    $buyer   = $_SESSION['user']['username'];
     $book    = trim($_POST['book'] ?? '');
     $message = trim($_POST['message'] ?? '');
     if ($seller === '' || $book === '' || $message === '') {
@@ -97,7 +103,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $key = "{$seller}_{$book}";
+    $u1 = $seller;
+$u2 = $buyer;
+$users = [$u1, $u2];
+sort($users, SORT_STRING);
+
+$key = "{$users[0]}_{$users[1]}_{$book}";
     if (!isset($chat_data[$key])) $chat_data[$key] = [];
 
     $chat_data[$key][] = [
@@ -116,7 +127,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // ===== チャット履歴読み込み =====
 if (isset($_GET['load_chat'])) {
     $key = $_GET['load_chat'];
+    [$u1, $u2, $book] = explode('_', $key, 3);
     $current = current_user()['username'];  // ← 今ログインしているユーザー
+    if ($current !== $u1 && $current !== $u2) {
+    http_response_code(403);
+    exit;
+}
+
 
     $raw = $chat_data[$key] ?? [];
     $result = [];

@@ -18,8 +18,27 @@ if (file_exists($books_file)) {
 
 /* ===== GET パラメータ ===== */
 $seller = $_GET['seller'] ?? '';
+$buyer  = $_SESSION['user']['username'];
 $book   = $_GET['book'] ?? '';
-$selected_key = ($seller && $book) ? "{$seller}_{$book}" : '';
+$selected_key = $_GET['chat_key'] ?? '';
+
+if ($selected_key && isset($chat_data[$selected_key])) {
+    [$u1, $u2, $book] = explode('_', $selected_key, 3);
+
+    $current = $_SESSION['user']['username'];
+    $seller = $u1; // 仮
+    $buyer  = $u2;
+
+    // books.json から本当の seller を確定
+    foreach ($books as $b) {
+        if ($b['title'] === $book && ($b['seller'] === $u1 || $b['seller'] === $u2)) {
+            $seller = $b['seller'];
+            $buyer  = ($seller === $u1) ? $u2 : $u1;
+            break;
+        }
+    }
+}
+
 
 /* ===== 売却状態チェック ===== */
 $is_sold = false;
@@ -57,8 +76,37 @@ $chats = [];
 $current = $_SESSION['user']['username'];
 
 foreach ($chat_data as $key => $messages) {
-    [$s_name, $s_book] = explode('_', $key, 2);
+    $parts = explode('_', $key, 3);
+    if (count($parts) !== 3) {
+        continue; // 旧仕様は無視
+    }
+
+    [$s_name, $b_name, $s_book] = $parts;
+
+    $real_seller = '';
+foreach ($books as $bk) {
+    if ($bk['title'] === $s_book &&
+        ($bk['seller'] === $s_name || $bk['seller'] === $b_name)) {
+        $real_seller = $bk['seller'];
+        break;
+    }
+}
+
+if ($real_seller === '') continue;
+
+$real_buyer = ($real_seller === $s_name) ? $b_name : $s_name;
+
+        [$u1, $u2] = [$s_name, $b_name];
+    $partner = ($current === $u1) ? $u2 : $u1;
+
+    // ★ 1対1保証（これ1回だけ）
+    if ($current !== $s_name && $current !== $b_name) {
+        continue;
+    }
+
     $last_msg = end($messages);
+    // 自分が seller または buyer のチャットだけ表示
+
 
     /* 未読数 */
     $unread = 0;
@@ -72,8 +120,9 @@ foreach ($chat_data as $key => $messages) {
     }
 
     /* 表示名 */
-    $display_name = $s_name;
-    $profile_file = __DIR__ . "/data/profiles/{$s_name}.json";
+    $partner = ($current === $s_name) ? $b_name : $s_name;
+    $display_name = $partner;
+    $profile_file = __DIR__ . "/data/profiles/{$partner}.json";
     if (file_exists($profile_file)) {
         $profile_data = json_decode(file_get_contents($profile_file), true);
         if (!empty($profile_data['display_name'])) {
@@ -82,7 +131,7 @@ foreach ($chat_data as $key => $messages) {
     }
 
     /* アバター */
-    $safe_name = preg_replace('/[^a-zA-Z0-9]/', '', $s_name);
+    $safe_name = preg_replace('/[^a-zA-Z0-9]/', '', $partner);
     $avatar_path = "images/sample_avatar.png";
     foreach (['png', 'jpg', 'jpeg'] as $ext) {
         $path = "uploads/avatars/avatar_{$safe_name}.{$ext}";
@@ -108,8 +157,8 @@ foreach ($chat_data as $key => $messages) {
 
 foreach ($books as $i => $b) {
     if (
-        ($b['seller'] ?? '') === $seller &&
-        ($b['title'] ?? '') === $book
+        ($b['seller'] ?? '') === $s_name &&
+        ($b['title'] ?? '') === $s_book
     ) {
         $book_index = $i;
         break;
@@ -163,7 +212,8 @@ $is_my_book = ($seller && $seller === $_SESSION['user']['username']);
     }
 
     $chats[] = [
-        'seller'       => $s_name,
+        'seller'       => $real_seller,
+        'buyer'        => $real_buyer,
         'book'         => $s_book,
         'avatar'       => $avatar_path,
         'display_name' => $display_name,
@@ -178,6 +228,11 @@ $is_my_book = ($seller && $seller === $_SESSION['user']['username']);
 
 /* ===== 最新順 ===== */
 usort($chats, fn($a, $b) => strcmp($b['time'], $a['time']));
+$messages = [];
+
+if ($selected_key && isset($chat_data[$selected_key])) {
+    $messages = $chat_data[$selected_key];
+}
 ?>
 
 <!DOCTYPE html>
@@ -218,9 +273,12 @@ usort($chats, fn($a, $b) => strcmp($b['time'], $a['time']));
             <p class="no-chat">取引中のユーザーはまだいません。</p>
         <?php else: ?>
             <?php foreach ($chats as $chat): ?>
-                <div class="chat-item <?= $chat['key'] === $selected_key ? 'active' : '' ?>"
-                     data-seller="<?= htmlspecialchars($chat['seller']) ?>"
-                     data-book="<?= htmlspecialchars($chat['book']) ?>">
+<div class="chat-item"
+     data-chat-key="<?= htmlspecialchars($chat['key']) ?>"
+     data-seller="<?= htmlspecialchars($chat['seller']) ?>"
+     data-buyer="<?= htmlspecialchars($chat['buyer']) ?>"
+     data-book="<?= htmlspecialchars($chat['book']) ?>">
+
 
                     <img src="<?= htmlspecialchars($chat['avatar']) ?>"
                          class="chat-avatar"
@@ -260,15 +318,17 @@ usort($chats, fn($a, $b) => strcmp($b['time'], $a['time']));
 
     <!-- 右カラム -->
     <div class="chat-screen">
-        <?php if (!$seller || !$book): ?>
+        <?php if (!$selected_key || !isset($chat_data[$selected_key])): ?>
             <div class="no-selection">
                 <p>👈 左の一覧から教科書を選択してください。</p>
             </div>
         <?php else: ?>
 
-<div class="chat-header"
+    <div class="chat-header"
      data-seller="<?= htmlspecialchars($seller, ENT_QUOTES) ?>"
+     data-buyer="<?= htmlspecialchars($buyer, ENT_QUOTES) ?>"
      data-book="<?= htmlspecialchars($book, ENT_QUOTES) ?>">
+
 
     <div class="chat-header-left">
         <h2 class="chat-book-title">
@@ -331,7 +391,22 @@ usort($chats, fn($a, $b) => strcmp($b['time'], $a['time']));
 
 
 
-            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-messages" id="chatMessages">
+                    <?php if (empty($messages)): ?>
+        <p class="no-message">まだメッセージはありません。</p>
+    <?php else: ?>
+        <?php foreach ($messages as $msg): ?>
+            <div class="chat-message <?= $msg['sender'] === $current ? 'me' : 'other' ?>">
+                <div class="message-text">
+                    <?= htmlspecialchars($msg['text']) ?>
+                </div>
+                <div class="message-time">
+                    <?= htmlspecialchars($msg['time']) ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+            </div>
 
             <div class="chat-input">
                 <input

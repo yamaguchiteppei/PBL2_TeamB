@@ -93,11 +93,13 @@ foreach ($books as $index => $book) {
                         </div>
 
                         <div class="action-buttons">
-                        <form action="chat_init.php" method="get">
+<?php if ($seller !== $current_user): ?>
+<form action="chat_init.php" method="post">
     <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
     <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
     <button type="submit" class="message-btn">💬 メッセージ</button>
 </form>
+<?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -158,14 +160,6 @@ foreach ($books as $index => $book) {
                             <form action="book_edit.php" method="get">
                                 <input type="hidden" name="index" value="<?= $book['index'] ?>">
                                 <button class="edit-btn">✏️ 編集</button>
-                            </form>
-
-
-
-                            <form action="chat_init.php" method="get">
-                                <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
-                                <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
-                                <button type="submit" class="message-btn">💬 メッセージ</button>
                             </form>
 
                             <?php if ($is_sold): ?>

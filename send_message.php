@@ -4,7 +4,14 @@ require_login();
 
 header("Content-Type: application/json; charset=utf-8");
 
-// JSONファイルの読み込み
+$chat_key = $_POST['chat_key'] ?? '';
+$message  = trim($_POST['message'] ?? '');
+
+if ($chat_key === '' || $message === '') {
+    echo json_encode(["error" => "invalid_params"]);
+    exit;
+}
+
 $chat_file = __DIR__ . "/chat_log.json";
 if (!file_exists($chat_file)) {
     file_put_contents($chat_file, json_encode([], JSON_UNESCAPED_UNICODE));
@@ -12,28 +19,20 @@ if (!file_exists($chat_file)) {
 
 $chat_data = json_decode(file_get_contents($chat_file), true) ?? [];
 
-// POSTデータの受信
-$seller  = $_POST['seller'] ?? '';
-$book    = $_POST['book'] ?? '';
-$message = trim($_POST['message'] ?? '');
-
-if ($seller === '' || $book === '' || $message === '') {
-    echo json_encode(["error" => "invalid_params"]);
+$parts = explode('_', $chat_key, 3);
+if (count($parts) !== 3) {
+    echo json_encode(["error" => "invalid_chat_key"]);
     exit;
 }
 
-// 自分のアカウント
+[$seller, $buyer, $book] = $parts;
+
 $me = $_SESSION['user']['username'];
-
-// キー（message_list.php と完全一致させる）
-$key = "{$seller}_{$book}";
-
-// 🔴 念のため存在保証（chat_init.php があってもOK）
-if (!isset($chat_data[$key])) {
-    $chat_data[$key] = [];
+if ($me !== $seller && $me !== $buyer) {
+    http_response_code(403);
+    exit;
 }
 
-// 保存するメッセージデータ
 $new_message = [
     "sender" => $me,
     "text"   => $message,
@@ -41,10 +40,8 @@ $new_message = [
     "read"   => false
 ];
 
-// 追加
-$chat_data[$key][] = $new_message;
+$chat_data[$chat_key][] = $new_message;
 
-// JSON へ保存
 file_put_contents(
     $chat_file,
     json_encode($chat_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
