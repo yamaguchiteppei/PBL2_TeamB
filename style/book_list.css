@@ -139,7 +139,16 @@ h2 {
   transition: all 0.25s ease;
 }
 .edit-btn { background-color: #2a72d4; color: white; }
-.delete-btn { background-color: #d9534f; color: white; }
+/* 既存の .delete-btn をこれに書き換え、または追記 */
+.delete-btn {
+    background-color: #dc3545; /* 少し鮮やかな赤 */
+    color: white;
+    margin-left: 5px; /* 隣のボタンとの隙間 */
+}
+
+.delete-btn:hover {
+    background-color: #c82333; /* ホバー時に濃くする */
+}
 .message-btn { background-color: #28a745; color: white; }
 
 /* ===== その他 ===== */
@@ -223,7 +232,7 @@ footer {
 
 /* --- SOLD のとき無効化したいボタン（色を薄くしてクリック不可） --- */
 .book-item.sold .edit-btn,
-.book-item.sold .delete-btn,
+
 .book-item.sold .message-btn,
 .book-item.sold .detail-btn {
     opacity: 0.5;         /* 色を薄くする */

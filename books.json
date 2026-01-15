@@ -9,25 +9,11 @@
         "status": "sold"
     },
     {
-        "title": "微積分５",
-        "image": "images\/sample_book.jpg",
-        "faculty": "共通教育",
-        "price": "0",
-        "seller": "k520111b"
-    },
-    {
         "title": "線形代数７",
         "image": "images\/sample_book.jpg",
         "faculty": "法学・政策学履修コース",
         "price": "0",
         "seller": "k520140u"
-    },
-    {
-        "title": "微積分",
-        "image": "images\/sample_book.jpg",
-        "faculty": "共通教育",
-        "price": "0",
-        "seller": "k520111b"
     },
     {
         "id": "69363e7d8e067",
@@ -43,21 +29,6 @@
         "created_at": "2025-12-14 17:40:55",
         "sellerName": "山口哲平",
         "status": "sold"
-    },
-    {
-        "id": "693e810f2f958",
-        "title": "システム英単語",
-        "image": "images\/sample_book.jpg",
-        "trade_type": "paid",
-        "price": 2000,
-        "faculty": "工学部",
-        "department": "",
-        "course": "",
-        "detail": "",
-        "seller": "k520111b",
-        "created_at": "2025-12-14 18:19:11",
-        "sellerName": "奥山颯太",
-        "status": "active"
     },
     {
         "id": "693e8e45d5998",
@@ -86,5 +57,34 @@
         "seller": "abcdefgh",
         "created_at": "2025-12-15 10:52:06",
         "sellerName": "abcdefgh"
+    },
+    {
+        "id": "696864c94ba63",
+        "title": "応用数学３",
+        "image": "images\/20260115125341_スクリーンショット 2026-01-13 130225.png",
+        "trade_type": "free",
+        "price": 0,
+        "faculty": "工学部",
+        "department": "工学科",
+        "course": "応用情報工学コース",
+        "detail": "ああああa",
+        "seller": "k520111b",
+        "created_at": "2026-01-15 12:53:45",
+        "sellerName": "奥山颯大",
+        "status": "active"
+    },
+    {
+        "id": "69686a7ba8e9d",
+        "title": "応用数学６",
+        "image": "images\/20260115131802_gazou.png",
+        "trade_type": "free",
+        "price": 0,
+        "faculty": "工学部",
+        "department": "工学科",
+        "course": "コンピュータ科学コース",
+        "detail": "",
+        "seller": "k520111b",
+        "created_at": "2026-01-15 13:18:03",
+        "sellerName": "奥山颯大"
     }
 ]

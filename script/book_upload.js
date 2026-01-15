@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePriceField(); // 画面読み込み時にも実行
 
     /* -----------------------------------
-       2. 学部・学科・コースの連動
+       2. 学部・学科・コースの連動（データ定義）
        ----------------------------------- */
     const universityData = {
         "共通教育": { "共通教育": [] },
@@ -56,14 +56,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const departmentSelect = document.getElementById('department_select');
     const courseSelect = document.getElementById('course_select');
 
+    // 選択肢をリセットする関数
     const resetSelect = (selectElement, defaultText) => {
         selectElement.innerHTML = '';
+        selectElement.disabled = true; // 基本は無効化
         const defaultOption = document.createElement('option');
         defaultOption.value = "";
         defaultOption.text = defaultText;
         selectElement.appendChild(defaultOption);
     };
 
+    // 選択肢を追加する関数
     const addOptions = (selectElement, items) => {
         items.forEach(item => {
             const option = document.createElement('option');
@@ -71,45 +74,110 @@ document.addEventListener("DOMContentLoaded", () => {
             option.text = item;
             selectElement.appendChild(option);
         });
+        if (items.length > 0 || (items.length === 0 && selectElement === courseSelect)) {
+             selectElement.disabled = false; // 中身があれば有効化
+        }
     };
 
+    /* -----------------------------------
+       3. 選択時の処理（保存機能付き）
+       ----------------------------------- */
+    
     // 学部が変わったとき
     facultySelect.addEventListener('change', function() {
         const faculty = this.value;
-        resetSelect(departmentSelect, "学科を選択してください");
-        resetSelect(courseSelect, "学科を選択してください");
-        courseSelect.disabled = true;
+        
+        // 1. 記憶する
+        sessionStorage.setItem('saved_faculty', faculty);
+        sessionStorage.removeItem('saved_department'); // 下位の選択はクリア
+        sessionStorage.removeItem('saved_course');
 
-        if (faculty && universityData[faculty]) {
-            const departments = Object.keys(universityData[faculty]);
-            if (departments.length > 0) {
-                departmentSelect.disabled = false;
-                addOptions(departmentSelect, departments);
-            } else {
-                addOptions(departmentSelect, ["なし"]);
-            }
-        } else {
-            departmentSelect.disabled = true;
-        }
+        // 2. 選択肢を更新
+        updateDepartmentOptions(faculty);
     });
 
     // 学科が変わったとき
     departmentSelect.addEventListener('change', function() {
         const faculty = facultySelect.value;
         const department = this.value;
+
+        // 1. 記憶する
+        sessionStorage.setItem('saved_department', department);
+        sessionStorage.removeItem('saved_course');
+
+        // 2. 選択肢を更新
+        updateCourseOptions(faculty, department);
+    });
+
+    // コースが変わったとき
+    courseSelect.addEventListener('change', function() {
+        sessionStorage.setItem('saved_course', this.value);
+    });
+
+
+    /* -----------------------------------
+       4. 更新ロジックの分離
+       ----------------------------------- */
+    function updateDepartmentOptions(faculty) {
+        resetSelect(departmentSelect, "学科を選択してください");
+        resetSelect(courseSelect, "コースを選択してください");
+
+        if (faculty && universityData[faculty]) {
+            const departments = Object.keys(universityData[faculty]);
+            if (departments.length > 0) {
+                addOptions(departmentSelect, departments);
+            } else {
+                // 学科がない場合（共通教育など）
+                addOptions(departmentSelect, ["なし"]);
+                // 「なし」を自動選択扱いにしても良いが、ここではユーザーに選ばせるかそのまま
+            }
+        }
+    }
+
+    function updateCourseOptions(faculty, department) {
         resetSelect(courseSelect, "コースを選択してください");
 
         if (faculty && department && universityData[faculty][department]) {
             const courses = universityData[faculty][department];
             if (courses.length > 0) {
-                courseSelect.disabled = false;
                 addOptions(courseSelect, courses);
             } else {
                 resetSelect(courseSelect, "コースはありません");
                 courseSelect.disabled = true;
             }
-        } else {
-            courseSelect.disabled = true;
         }
-    });
+    }
+
+    /* -----------------------------------
+       5. 復元処理（戻るボタン対策の決定版）
+       ----------------------------------- */
+    const restoreSelections = () => {
+        const savedFaculty = sessionStorage.getItem('saved_faculty');
+        const savedDepartment = sessionStorage.getItem('saved_department');
+        const savedCourse = sessionStorage.getItem('saved_course');
+
+        // 学部が保存されていたら復元
+        if (savedFaculty) {
+            facultySelect.value = savedFaculty;
+            // 学部の選択に合わせて学科リストを作る
+            updateDepartmentOptions(savedFaculty);
+
+            // 学科が保存されていたら復元
+            if (savedDepartment) {
+                departmentSelect.value = savedDepartment;
+                // 学科の選択に合わせてコースリストを作る
+                updateCourseOptions(savedFaculty, savedDepartment);
+
+                // コースが保存されていたら復元
+                if (savedCourse) {
+                    courseSelect.value = savedCourse;
+                }
+            }
+        }
+    };
+
+    // 画面が表示されたら（初回ロードでも、戻るボタンでも）復元を実行
+    window.addEventListener('pageshow', restoreSelections);
+    // 初回読み込み時にも念のため実行
+    restoreSelections();
 });

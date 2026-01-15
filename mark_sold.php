@@ -1,40 +1,32 @@
 <?php
-require __DIR__ . '/php/auth.php';
-require_login();
+session_start(); // セッション開始（auth.phpがあるならそれでもOK）
 
-$seller = $_POST['seller'] ?? '';
-$book   = $_POST['book'] ?? '';
+// 1. POSTで送られてきた「本の番号(index)」を受け取る
+$index = $_POST['index'] ?? null;
 
-if ($seller === '' || $book === '') {
-    header("Location: message_list.php");
-    exit;
-}
-
+// 2. books.json を読み込む
 $file = __DIR__ . '/books.json';
-$books = json_decode(file_get_contents($file), true) ?? [];
+$books = file_exists($file) ? json_decode(file_get_contents($file), true) : [];
 
-foreach ($books as &$b) {
-    if (
-        ($b['seller'] ?? '') === $seller &&
-        ($b['title'] ?? '') === $book
-    ) {
-        $b['status'] = 'sold';
-        break;
-    }
+// 3. データが存在し、指定されたindexがあるかチェック
+if ($index !== null && isset($books[$index])) {
+    
+    // (安全のため) ログイン中のユーザーが出品者本人か確認しても良い
+    // $current_user = $_SESSION['user']['username'] ?? '';
+    // if (($books[$index]['seller'] ?? '') === $current_user) { ... }
+
+    // 4. ステータスを 'sold' に書き換える
+    $books[$index]['status'] = 'sold';
+
+    // 5. 保存する（排他制御は簡易的）
+    // JSONファイルは chmod 666 になっている必要があります
+    file_put_contents(
+        $file,
+        json_encode($books, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+    );
 }
 
-file_put_contents(
-    $file,
-    json_encode($books, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-);
-
-// AJAXリクエストならJSONで応答、それ以外は従来通りリダイレクト
-if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(['success' => true, 'index' => $index, 'status' => 'sold']);
-    exit;
-}
-
-// 完了後 book_list へ
+// 6. 元の画面に戻る
 header("Location: book_list.php");
 exit;
+?>
