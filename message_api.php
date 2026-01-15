@@ -1,189 +1,193 @@
 <?php
 require __DIR__ . '/php/auth.php';
-// 簡易デバッグ: 受信内容をログに残す（開発時のみ）
 
+header('Content-Type: application/json; charset=utf-8');
+
+// ===== ログイン確認 =====
 if (!is_logged_in()) {
-    header('Content-Type: application/json; charset=utf-8');
     echo json_encode(["status" => "error", "msg" => "not_logged_in"]);
     exit;
 }
 
+$current = current_user()['username'];
+
+// ===== チャットログ読み込み =====
 $chat_file = __DIR__ . '/chat_log.json';
 if (!file_exists($chat_file)) {
-    $r = file_put_contents($chat_file, json_encode([], JSON_UNESCAPED_UNICODE));
-    if ($r === false) @file_put_contents($debug_log, "FAILED_CREATE_CHATFILE:\n" . print_r(error_get_last(), true) . "\n", FILE_APPEND);
+    file_put_contents($chat_file, json_encode([], JSON_UNESCAPED_UNICODE));
 }
 $chat_data = json_decode(file_get_contents($chat_file), true) ?? [];
 
-// ===== メッセージ送信 (POST) =====
+
+/* =========================================================
+   メッセージ送信 / 通報（POST）
+========================================================= */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // 通報処理か送信か判定
+
     $action = $_POST['action'] ?? '';
-    if ($action === 'report_chat') {
 
-    $seller = trim($_POST['seller'] ?? '');
-    $buyer  = $_SESSION['user']['username'];
-    $book   = trim($_POST['book'] ?? '');
-    $message = trim($_POST['message'] ?? '');
-
-    $u1 = $seller;
-$u2 = $buyer;
-$users = [$u1, $u2];
-sort($users, SORT_STRING);
-
-$key = "{$users[0]}_{$users[1]}_{$book}";
-
-    $reason = trim($_POST['reason'] ?? '');
-
-    if ($seller === '' || $book === '') {
-        echo json_encode(["status" => "error", "msg" => "invalid chat report"]);
-        exit;
-    }
-
-    $reports_file = __DIR__ . '/message_reports.json';
-    if (!file_exists($reports_file)) {
-        file_put_contents($reports_file, json_encode([], JSON_UNESCAPED_UNICODE));
-    }
-
-    $reports = json_decode(file_get_contents($reports_file), true) ?? [];
-
-    $reports[] = [
-        "type" => "chat_report",
-        "seller" => $seller,
-        "book" => $book,
-        "reason" => $reason ?: "（理由なし）",
-        "reporter" => current_user()['username'],
-        "reported_at" => date("Y-m-d H:i:s")
-    ];
-
-    file_put_contents($reports_file, json_encode($reports, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-
-    echo json_encode(["status" => "ok"]);
-    exit;
-}
-
+    /* ---------- 個別メッセージ通報 ---------- */
     if ($action === 'report') {
         $seller = trim($_POST['seller'] ?? '');
-        $book = trim($_POST['book'] ?? '');
-        $text = trim($_POST['text'] ?? '');
-        $msg_time = trim($_POST['time'] ?? '');
-        $original_sender = trim($_POST['original_sender'] ?? '');
+        $book   = trim($_POST['book'] ?? '');
+        $text   = trim($_POST['text'] ?? '');
+        $time   = trim($_POST['time'] ?? '');
+        $orig   = trim($_POST['original_sender'] ?? '');
+        $reason = trim($_POST['reason'] ?? '');
+
         if ($seller === '' || $book === '' || $text === '') {
             echo json_encode(["status" => "error", "msg" => "invalid input"]);
             exit;
         }
+
         $reports_file = __DIR__ . '/message_reports.json';
         if (!file_exists($reports_file)) {
-            $r = file_put_contents($reports_file, json_encode([], JSON_UNESCAPED_UNICODE));
-            if ($r === false) @file_put_contents($debug_log, "FAILED_CREATE_REPORTS:\n" . print_r(error_get_last(), true) . "\n", FILE_APPEND);
+            file_put_contents($reports_file, json_encode([], JSON_UNESCAPED_UNICODE));
         }
+
         $reports = json_decode(file_get_contents($reports_file), true) ?? [];
         $reports[] = [
-            'seller' => $seller,
-            'book' => $book,
-            'text' => $text,
-            'time' => $msg_time,
-            'original_sender' => $original_sender,
-            'reporter' => current_user(),
-            'reported_at' => date("Y-m-d H:i:s")
+            "seller"   => $seller,
+            "book"     => $book,
+            "text"     => $text,
+            "time"     => $time,
+            "sender"   => $orig,
+            "reporter" => $current,
+            "reason"   => $reason ?: "（理由なし）",
+            "reported_at" => date("Y-m-d H:i:s")
         ];
-        $r = file_put_contents($reports_file, json_encode($reports, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-        if ($r === false) @file_put_contents($debug_log, "FAILED_WRITE_REPORTS:\n" . print_r(error_get_last(), true) . "\n", FILE_APPEND);
+
+        file_put_contents(
+            $reports_file,
+            json_encode($reports, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+        );
+
         echo json_encode(["status" => "ok"]);
         exit;
     }
 
-    // 通常のメッセージ送信
-    $seller  = trim($_POST['seller'] ?? '');
-    $buyer   = $_SESSION['user']['username'];
-    $book    = trim($_POST['book'] ?? '');
+    /* ---------- 通常メッセージ送信 ---------- */
     $message = trim($_POST['message'] ?? '');
-    if ($seller === '' || $book === '' || $message === '') {
-        echo json_encode(["status" => "error", "msg" => "invalid input"]);
+    if ($message === '') {
+        echo json_encode(["status" => "error", "msg" => "empty message"]);
         exit;
     }
 
-    $u1 = $seller;
-$u2 = $buyer;
-$users = [$u1, $u2];
-sort($users, SORT_STRING);
+    // ★ chat_key はセッションのみを信頼
+    $chat_key = $_SESSION['current_chat_key'] ?? '';
+    if ($chat_key === '') {
+        echo json_encode(["status" => "error", "msg" => "no chat key"]);
+        exit;
+    }
 
-$key = "{$users[0]}_{$users[1]}_{$book}";
-    if (!isset($chat_data[$key])) $chat_data[$key] = [];
+    // chat_key を分解
+    [$u1, $u2, $book] = explode('_', $chat_key, 3);
 
-    $chat_data[$key][] = [
-        "sender" => current_user()['username'],
+    // 不正アクセス防止
+    if ($current !== $u1 && $current !== $u2) {
+        echo json_encode(["status" => "error", "msg" => "invalid user"]);
+        exit;
+    }
+
+    if (!isset($chat_data[$chat_key])) {
+        $chat_data[$chat_key] = [];
+    }
+
+    $chat_data[$chat_key][] = [
+        "sender" => $current,
         "text"   => $message,
         "time"   => date("Y-m-d H:i:s"),
         "read"   => false
     ];
 
-    $r = file_put_contents($chat_file, json_encode($chat_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-    if ($r === false) @file_put_contents($debug_log, "FAILED_WRITE_CHAT:\n" . print_r(error_get_last(), true) . "\n", FILE_APPEND);
+    file_put_contents(
+        $chat_file,
+        json_encode($chat_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+    );
+
     echo json_encode(["status" => "ok"]);
     exit;
 }
 
-// ===== チャット履歴読み込み =====
+
+/* =========================================================
+   チャット履歴読み込み
+========================================================= */
 if (isset($_GET['load_chat'])) {
     $key = $_GET['load_chat'];
-    [$u1, $u2, $book] = explode('_', $key, 3);
-    $current = current_user()['username'];  // ← 今ログインしているユーザー
+
+    if (!isset($chat_data[$key])) {
+        echo json_encode([]);
+        exit;
+    }
+
+    [$u1, $u2] = explode('_', $key, 3);
     if ($current !== $u1 && $current !== $u2) {
-    http_response_code(403);
-    exit;
-}
+        http_response_code(403);
+        exit;
+    }
 
-
-    $raw = $chat_data[$key] ?? [];
     $result = [];
-
-    foreach ($raw as $m) {
-        $sender = $m['sender'] ?? '';
+    foreach ($chat_data[$key] as $m) {
         $result[] = [
-            'sender' => $sender,
-            'text'   => $m['text'] ?? '',
-            'time'   => $m['time'] ?? '',
-            'read'   => $m['read'] ?? false,
-            // 👇 ここで「自分のメッセージかどうか」をサーバ側でフラグにする
-            'is_me'  => ($sender === $current),
+            "sender" => $m['sender'],
+            "text"   => $m['text'],
+            "time"   => $m['time'],
+            "read"   => $m['read'],
+            "is_me"  => ($m['sender'] === $current)
         ];
     }
 
-    header('Content-Type: application/json; charset=utf-8');
     echo json_encode($result);
     exit;
 }
 
-// ===== 未読数リスト =====
+
+/* =========================================================
+   未読数リスト
+========================================================= */
 if (isset($_GET['status']) && $_GET['status'] === 'list') {
     $counts = [];
+
     foreach ($chat_data as $key => $messages) {
         $unread = 0;
         foreach ($messages as $m) {
-            $current = current_user()['username'];
-            if ($m['sender'] !== $current && (empty($m['read']) || !$m['read'])) $unread++;
+            if ($m['sender'] !== $current && empty($m['read'])) {
+                $unread++;
+            }
         }
         $counts[$key] = $unread;
     }
+
     echo json_encode($counts);
     exit;
 }
 
-// ===== 既読化処理 =====
+
+/* =========================================================
+   既読化
+========================================================= */
 if (isset($_GET['mark_read'])) {
     $key = $_GET['mark_read'];
+
     if (isset($chat_data[$key])) {
         foreach ($chat_data[$key] as &$m) {
-            $current = current_user()['username'];
-            if ($m['sender'] !== $current) $m['read'] = true;
+            if ($m['sender'] !== $current) {
+                $m['read'] = true;
+            }
         }
         unset($m);
-        file_put_contents($chat_file, json_encode($chat_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+
+        file_put_contents(
+            $chat_file,
+            json_encode($chat_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+        );
     }
+
     echo json_encode(["status" => "ok"]);
     exit;
 }
 
+
+/* ========================================================= */
 echo json_encode(["status" => "error", "msg" => "no action"]);
-?>
