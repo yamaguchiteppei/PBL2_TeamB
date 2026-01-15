@@ -1,0 +1,277 @@
+/* ====================
+   詳細ページ固有のスタイル - book_detail.css
+   ==================== */
+
+/* 共通テーマカラー */
+:root {
+    --main-blue: #004b97;
+    --light-blue: #eaf3ff;
+    --accent-blue: #2a72d4;
+    --danger-red: #d9534f;
+    --free-green: #28a745;
+    --text-dark: #333;
+}
+
+/* ====================
+   詳細コンテナ
+   ==================== */
+.detail-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0, 75, 151, 0.15);
+}
+
+/* 一覧に戻る */
+.back-to-list-btn {
+    background: none;
+    border: none;
+    color: var(--main-blue);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    transition: color 0.2s;
+}
+.back-to-list-btn:hover {
+    color: var(--accent-blue);
+    text-decoration: underline;
+}
+
+/* ====================
+   教科書ヘッダー
+   ==================== */
+.book-header {
+    display: flex;
+    gap: 30px;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--light-blue);
+}
+
+.book-image {
+    width: 260px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 10px;
+    border: 2px solid #cfe1fb;
+    background: #fff;
+}
+
+/* 情報 */
+.book-info h1 {
+    font-size: 2rem;
+    color: var(--main-blue);
+    margin: 0 0 12px 0;
+}
+
+/* 売却済み */
+.sold-out-badge {
+    display: inline-block;
+    background: var(--danger-red);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+}
+
+/* 価格 */
+.price-tag {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin: 14px 0;
+}
+.price-tag:not(.free) {
+    color: var(--danger-red);
+}
+.price-tag.free {
+    color: var(--free-green);
+}
+
+/* 詳細項目 */
+.detail-item {
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+}
+.detail-item strong {
+    color: #666;
+    width: 100px;
+    display: inline-block;
+}
+
+/* ====================
+   説明文
+   ==================== */
+.description-section {
+    margin-top: 30px;
+}
+.description-section h2 {
+    font-size: 1.4rem;
+    color: var(--main-blue);
+    border-left: 6px solid var(--main-blue);
+    padding-left: 12px;
+    margin-bottom: 16px;
+}
+.description-box {
+    background: var(--light-blue);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #cfe1fb;
+    white-space: pre-wrap;
+    line-height: 1.6;
+}
+
+/* ====================
+   アクションボタン
+   ==================== */
+.action-area {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid var(--light-blue);
+    text-align: center;
+}
+
+.action-btn {
+    display: inline-block;
+    padding: 14px 26px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    margin: 8px;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* メッセージ */
+.message-btn {
+    background: var(--main-blue);
+    color: #fff;
+}
+.message-btn:hover {
+    background: var(--accent-blue);
+}
+
+/* 編集 */
+.edit-btn {
+    background: #f0ad4e;
+    color: #fff;
+}
+.edit-btn:hover {
+    background: #ec971f;
+}
+
+/* 売却済み文言 */
+.sold-message {
+    color: #888;
+    font-size: 1.1rem;
+}
+
+/* ====================
+   モバイル対応
+   ==================== */
+@media (max-width: 700px) {
+    .detail-container {
+        margin: 16px;
+        padding: 20px;
+    }
+
+    .book-header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .book-image {
+        width: 100%;
+        max-width: 260px;
+    }
+
+    .book-info h1 {
+        text-align: center;
+        font-size: 1.5rem;
+    }
+
+    .price-tag {
+        text-align: center;
+    }
+
+    .action-btn {
+        width: 100%;
+        max-width: 320px;
+    }
+}
+/* ====================
+   共通ヘッダー（青テーマ）
+   ==================== */
+header {
+    background: #004b97;
+    color: #ffffff;
+    padding: 14px 32px;
+    box-shadow: 0 4px 14px rgba(0, 75, 151, 0.35);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* ナビゲーション */
+.menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* ボタン */
+.menu button {
+    background: #ffffff;
+    color: #004b97;
+    border: none;
+    padding: 8px 22px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+/* hover */
+.menu button:hover {
+    background: #e7edf9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* アクティブ */
+.menu button.active {
+    background: #004b97;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+}
+
+/* ====================
+   モバイル対応
+   ==================== */
+@media (max-width: 768px) {
+    header {
+        padding: 12px 16px;
+    }
+
+    .menu {
+        gap: 10px;
+    }
+
+    .menu button {
+        padding: 6px 14px;
+        font-size: 0.85rem;
+    }
+}

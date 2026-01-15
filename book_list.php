@@ -59,16 +59,24 @@ foreach ($books as $index => $book) {
             <p style="text-align:center; color:#666;">現在、購入できる教科書はありません。</p>
         <?php else: ?>
             <?php foreach ($other_books as $book): ?>
+            <?php
+    $image_path = 'images/sample_book.png';
+    if (!empty($book['image']) && file_exists(__DIR__ . '/' . $book['image'])) {
+        $image_path = $book['image'];
+    }
+?>    
                 <?php
                     $title = $book['title'] ?? '';
                     $faculty = $book['faculty'] ?? '';
                     $price = $book['price'] ?? '';
                     $seller = $book['seller'] ?? '不明';
                     $is_sold = ($book['status'] ?? 'active') === 'sold';
+                    $sellerName = $book['sellerName'] ?? '不明';
                 ?>
-                <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
+                 <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
                      data-group="others"
-                     data-search="<?= htmlspecialchars(mb_strtolower($title.' '.$faculty.' '.$price)) ?>">
+                     data-search="<?= htmlspecialchars(mb_strtolower($title.' '.$faculty.' '.$price)) ?>"
+                     data-detail-url="book_detail.php?index=<?= $book['index'] ?>">
 
                     <?php if ($is_sold): ?>
                         <div class="sold-badge">SOLD OUT</div>
@@ -79,20 +87,17 @@ foreach ($books as $index => $book) {
                     <div class="book-info">
                         <div class="book-title"><?= htmlspecialchars($title) ?></div>
                         <div class="book-faculty"><?= htmlspecialchars($faculty) ?></div>
+                        <div class="book-seller"><a href="view_profile.php?user=<?= urlencode($seller) ?>" style="color: inherit; text-decoration: none; cursor: pointer;"><u><?= htmlspecialchars($sellerName) ?>（<?= htmlspecialchars($seller) ?>）</u></a></div>
                         <div class="book-price">
                             <?= ($price === '' || $price === '0') ? '無料' : htmlspecialchars($price).'円' ?>
                         </div>
 
                         <div class="action-buttons">
-                            <form action="message_list.php" method="get">
-                                <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
-                                <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
-                                <button type="submit" class="message-btn">💬 メッセージ</button>
-                            </form>
-
-                            <button onclick="location.href='book_detail.php?index=<?= $book['index'] ?>'" class="detail-btn">
-                                📖 詳細
-                            </button>
+                        <form action="chat_init.php" method="get">
+    <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
+    <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
+    <button type="submit" class="message-btn">💬 メッセージ</button>
+</form>
                         </div>
                     </div>
                 </div>
@@ -118,11 +123,18 @@ foreach ($books as $index => $book) {
         <?php else: ?>
             <?php foreach ($my_books as $book): ?>
                 <?php
+    $image_path = 'images/sample_book.png';
+    if (!empty($book['image']) && file_exists(__DIR__ . '/' . $book['image'])) {
+        $image_path = $book['image'];
+    }
+?>
+                <?php
                     $title = $book['title'] ?? '';
                     $faculty = $book['faculty'] ?? '';
                     $price = $book['price'] ?? '';
                     $seller = $book['seller'] ?? $current_user;
                     $is_sold = ($book['status'] ?? 'active') === 'sold';
+                    $sellerName = $book['sellerName'] ?? 'current_user';
                 ?>
                 <div class="book-item <?= $is_sold ? 'sold' : '' ?>"
                      data-group="mine"
@@ -137,6 +149,7 @@ foreach ($books as $index => $book) {
                     <div class="book-info">
                         <div class="book-title"><?= htmlspecialchars($title) ?></div>
                         <div class="book-faculty"><?= htmlspecialchars($faculty) ?></div>
+                        <div class="book-seller"><?= htmlspecialchars($sellerName) ?> （<?= htmlspecialchars($seller) ?>）</div>
                         <div class="book-price">
                             <?= ($price === '' || $price === '0') ? '無料' : htmlspecialchars($price).'円' ?>
                         </div>
@@ -147,20 +160,13 @@ foreach ($books as $index => $book) {
                                 <button class="edit-btn">✏️ 編集</button>
                             </form>
 
-                            <form action="book_delete.php" method="post" onsubmit="return confirm('本当に削除しますか？');">
-                                <input type="hidden" name="index" value="<?= $book['index'] ?>">
-                                <button class="delete-btn">🗑 削除</button>
-                            </form>
 
-                            <form action="message_list.php" method="get">
+
+                            <form action="chat_init.php" method="get">
                                 <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
                                 <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
                                 <button type="submit" class="message-btn">💬 メッセージ</button>
                             </form>
-
-                            <button onclick="location.href='book_detail.php?index=<?= $book['index'] ?>'" class="detail-btn">
-                                📖 詳細
-                            </button>
 
                             <?php if ($is_sold): ?>
                                 <form action="mark_available.php" method="post" onsubmit="return confirm('販売中に戻しますか？');">
@@ -168,7 +174,7 @@ foreach ($books as $index => $book) {
                                     <button class="available-btn">🔄 販売中に戻す</button>
                                 </form>
                             <?php else: ?>
-                                <form action="mark_sold.php" method="post" onsubmit="return confirm('この教科書を売却済みにしますか？');">
+                                <form class="mark-sold-form" acition="mark_sold.php" method="post" onsubmit="return confirm('この教科書を売却済みにしますか？');">
                                     <input type="hidden" name="index" value="<?= $book['index'] ?>">
                                     <button class="sold-btn">✔️ 売却済みにする</button>
                                 </form>
