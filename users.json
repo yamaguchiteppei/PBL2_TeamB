@@ -40,5 +40,12 @@
         "password": "$2y$10$PP2\/zkiqhKNyAlVZltp9d.szvXrtTYDaFEOU8oOGm\/A5PJmiDknv6",
         "token": "9c374d2ec2879baf01fe7ea0915f75d5",
         "verified": true
+    },
+    {
+        "username": "k555abc",
+        "email": "k555abc@mails.cc.ehime-u.ac.jp",
+        "password": "$2y$10$qc9LUjkOI17W9dcU9kugrOAWmYAdnpv\/oPeZPLWi2LUPWmlb3RFZ6",
+        "token": "cedd61f85e71c324c19894bab08db4ef",
+        "verified": true
     }
 ]
