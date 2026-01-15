@@ -184,7 +184,7 @@ foreach ($books as $index => $book) {
                                     <button class="available-btn">🔄 販売中に戻す</button>
                                 </form>
                             <?php else: ?>
-                                <form class="mark-sold-form" acition="mark_sold.php" method="post" onsubmit="return confirm('この教科書を売却済みにしますか？');">
+                                <form class="mark-sold-form" action="mark_sold.php" method="post" onsubmit="return confirm('この教科書を売却済みにしますか？');">
                                     <input type="hidden" name="index" value="<?= $book['index'] ?>">
                                     <button class="sold-btn">✔️ 売却済みにする</button>
                                 </form>
