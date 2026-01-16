@@ -178,7 +178,7 @@ footer {
 }
 
 .sold-btn {
-    background-color: #6c757d;
+    background-color: #dc3545;
     color: white;
     padding: 6px 12px;
     border-radius: 6px;
@@ -186,7 +186,7 @@ footer {
     cursor: pointer;
 }
 .sold-btn:hover {
-    background-color: #5a6268;
+    background-color:  #c82333;
 }
 
 /* SOLD OUT ラベル */
@@ -214,6 +214,21 @@ footer {
 /* SOLD のときも「販売中に戻す」ボタンは有効にする */
 .book-item.sold .available-btn {
     pointer-events: auto; /* ←クリック可能 */
+}
+
+/* 販売中に戻すボタン（緑） */
+.available-btn {
+    background-color: #28a745; /* 緑 */
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.available-btn:hover {
+    background-color: #218838; /* 濃い緑 */
 }
 
 /* --- SOLD でもカード全体の色は薄くしない --- */
