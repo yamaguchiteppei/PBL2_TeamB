@@ -398,24 +398,27 @@ if (file_exists($partner_profile)) {
         <?php if ($is_my_book): ?>
             <?php if ($is_sold): ?>
                 <!-- 販売中に戻す -->
-                <form action="mark_available.php" method="post"
-                      onsubmit="return confirm('販売中に戻しますか？');">
-                    <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
-                    <input type="hidden" name="book" value="<?= htmlspecialchars($book) ?>">
-                    <button class="header-action-btn available">
-                        🔄 販売中に戻す
-                    </button>
-                </form>
+<form action="mark_available.php" method="post"
+      onsubmit="return confirm('販売中に戻しますか？');">
+    <input type="hidden" name="index" value="<?= (int)$book_index ?>">
+    <input type="hidden" name="redirect"
+           value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
+    <button class="header-action-btn available">
+        🔄 販売中に戻す
+    </button>
+</form>
             <?php else: ?>
                 <!-- 売却済みにする -->
-                <form action="mark_sold.php" method="post"
-                      onsubmit="return confirm('この教科書を売却済みにしますか？');">
-                    <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
-                    <input type="hidden" name="book" value="<?= htmlspecialchars($book) ?>">
-                    <button class="header-action-btn sold">
-                        ✔ 売却済みにする
-                    </button>
-                </form>
+<form action="mark_sold.php" method="post"
+      onsubmit="return confirm('この教科書を売却済みにしますか？');">
+    <input type="hidden" name="index" value="<?= (int)$book_index ?>">
+    <input type="hidden" name="redirect"
+           value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
+    <button class="header-action-btn sold">
+        ✔ 売却済みにする
+    </button>
+</form>
+
             <?php endif; ?>
         <?php endif; ?>
 
