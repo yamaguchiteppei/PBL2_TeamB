@@ -40,6 +40,8 @@ if ($selected_key && isset($chat_data[$selected_key])) {
 }
 
 
+
+
 /* ===== 売却状態チェック ===== */
 $is_sold = false;
 if ($seller && $book && file_exists($books_file)) {
@@ -131,15 +133,21 @@ $real_buyer = ($real_seller === $s_name) ? $b_name : $s_name;
     }
 
     /* アバター */
-    $safe_name = preg_replace('/[^a-zA-Z0-9]/', '', $partner);
-    $avatar_path = "images/default.jpg";
-    foreach (['png', 'jpg', 'jpeg'] as $ext) {
-        $path = "uploads/avatars/avatar_{$safe_name}.{$ext}";
-        if (file_exists(__DIR__ . '/' . $path)) {
-            $avatar_path = $path;
-            break;
-        }
+/* アバター（profiles の JSON を参照） */
+$avatar_path = 'images/default.jpg'; // デフォルト
+
+$profile_file = __DIR__ . "/data/profiles/{$partner}.json";
+if (file_exists($profile_file)) {
+    $profile_data = json_decode(file_get_contents($profile_file), true);
+
+    if (
+        !empty($profile_data['avatar']) &&
+        file_exists(__DIR__ . '/' . $profile_data['avatar'])
+    ) {
+        $avatar_path = $profile_data['avatar'];
     }
+}
+
 
     /* 売却済み判定（チャット単位） */
     $is_sold_chat = false;
@@ -233,6 +241,34 @@ $messages = [];
 if ($selected_key && isset($chat_data[$selected_key])) {
     $messages = $chat_data[$selected_key];
 }
+/* ===== 右カラム用：自分・相手のアバター ===== */
+$current = $_SESSION['user']['username'];
+
+/* 相手を確定（seller / buyer どちらか） */
+$partner = ($current === $seller) ? $buyer : $seller;
+
+/* デフォルト */
+$my_avatar = 'images/default.jpg';
+$partner_avatar = 'images/default.jpg';
+
+/* 自分のアバター */
+$my_profile = __DIR__ . "/data/profiles/{$current}.json";
+if (file_exists($my_profile)) {
+    $p = json_decode(file_get_contents($my_profile), true);
+    if (!empty($p['avatar']) && file_exists(__DIR__ . '/' . $p['avatar'])) {
+        $my_avatar = $p['avatar'];
+    }
+}
+
+/* 相手のアバター（← 左カラムと完全一致） */
+$partner_profile = __DIR__ . "/data/profiles/{$partner}.json";
+if (file_exists($partner_profile)) {
+    $p = json_decode(file_get_contents($partner_profile), true);
+    if (!empty($p['avatar']) && file_exists(__DIR__ . '/' . $p['avatar'])) {
+        $partner_avatar = $p['avatar'];
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -396,14 +432,46 @@ if ($selected_key && isset($chat_data[$selected_key])) {
         <p class="no-message">まだメッセージはありません。</p>
     <?php else: ?>
         <?php foreach ($messages as $msg): ?>
-            <div class="chat-message <?= $msg['sender'] === $current ? 'me' : 'other' ?>">
-                <div class="message-text">
-                    <?= htmlspecialchars($msg['text']) ?>
-                </div>
-                <div class="message-time">
-                    <?= htmlspecialchars($msg['time']) ?>
-                </div>
-            </div>
+            <?php
+$sender = $msg['sender'];
+$sender_avatar = 'images/default.jpg';
+
+$profile_file = __DIR__ . "/data/profiles/{$sender}.json";
+if (file_exists($profile_file)) {
+    $profile_data = json_decode(file_get_contents($profile_file), true);
+    if (
+        !empty($profile_data['avatar']) &&
+        file_exists(__DIR__ . '/' . $profile_data['avatar'])
+    ) {
+        $sender_avatar = $profile_data['avatar'];
+    }
+}
+?>
+<div class="chat-message <?= $msg['sender'] === $current ? 'me' : 'other' ?>">
+
+    <?php if ($msg['sender'] !== $current): ?>
+        <img src="<?= htmlspecialchars($partner_avatar) ?>"
+             class="message-avatar"
+             alt="avatar">
+    <?php endif; ?>
+
+    <div class="message-bubble">
+        <div class="message-text">
+            <?= htmlspecialchars($msg['text']) ?>
+        </div>
+        <div class="message-time">
+            <?= htmlspecialchars($msg['time']) ?>
+        </div>
+    </div>
+
+    <?php if ($msg['sender'] === $current): ?>
+        <img src="<?= htmlspecialchars($my_avatar) ?>"
+             class="message-avatar"
+             alt="avatar">
+    <?php endif; ?>
+
+</div>
+
         <?php endforeach; ?>
     <?php endif; ?>
             </div>

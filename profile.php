@@ -26,23 +26,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username     = trim($_POST['username'] ?? '');
     $faculty      = trim($_POST['faculty'] ?? '');
     $bio          = trim($_POST['bio'] ?? '');
-    $avatar_path  = $profile['avatar'] ?? 'images/default.jpg';
+    $avatar_path = $profile['avatar'] ?? null;
+
 
     // ===== アバター画像の保存処理 =====
-    if (!empty($_FILES['avatar']['name'])) {
-      // 他の場所と揃えて uploads/avatars に保存する
-      $upload_dir = __DIR__ . '/uploads/avatars';
-      if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
+    if (
+        isset($_FILES['avatar']) &&
+        $_FILES['avatar']['error'] === UPLOAD_ERR_OK
+    ) {
+        $upload_dir = __DIR__ . '/uploads/avatars';
+        if (!file_exists($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
 
-      $ext = pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION);
-      // ファイル名は他と同様に avatar_{username}.png 形式に統一
-      $new_name = 'avatar_' . $sessionUser . '.' . $ext;
-      $target = $upload_dir . '/' . $new_name;
+        // 🔒 拡張子は png に統一
+        $new_name = 'avatar_' . $sessionUser . '.png';
+        $target = $upload_dir . '/' . $new_name;
 
-      if (move_uploaded_file($_FILES['avatar']['tmp_name'], $target)) {
-        $avatar_path = 'uploads/avatars/' . $new_name;
-      }
+        // 画像チェック
+        if (getimagesize($_FILES['avatar']['tmp_name'])) {
+            move_uploaded_file($_FILES['avatar']['tmp_name'], $target);
+            $avatar_path = 'uploads/avatars/' . $new_name;
+        }
     }
+
 
     // ===== JSONに保存 =====
     $new_profile = [
@@ -50,8 +57,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         'username'     => $username ?: $sessionUser,
         'faculty'      => $faculty,
         'bio'          => $bio,
-        'avatar'       => $avatar_path
     ];
+
+        if ($avatar_path) {
+        $new_profile['avatar'] = $avatar_path;
+    }
+    
     file_put_contents($dataFile, json_encode($new_profile, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
     $profile = $new_profile; // 即反映

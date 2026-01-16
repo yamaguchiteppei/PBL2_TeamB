@@ -62,7 +62,7 @@ function tryLoadAvatar(index = 0) {
 // 画像読み込み開始
 tryLoadAvatar();
 
-    avatar.onerror = () => { avatar.src = "images/default.jpg"; };  
+      
     avatar.className = "chat-avatar-small";
 
     row.appendChild(avatar);

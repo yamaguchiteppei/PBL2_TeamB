@@ -205,6 +205,18 @@ header {
   display: flex;
   flex-direction: column;
 }
+.chat-message {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 12px;
+}
+.chat-message.me {
+    justify-content: flex-end;
+}
+
+.chat-message.other {
+    justify-content: flex-start;
+}
 .message {
   margin-bottom: 12px;
   padding: 14px 18px;
@@ -358,6 +370,24 @@ header {
 
 .chat-list {
     background-image: none !important;
+}
+.message-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 8px;
+}
+.chat-message.me .message-bubble {
+    background: #d1f0ff;
+    border-radius: 12px 12px 0 12px;
+    padding: 8px 12px;
+}
+
+.chat-message.other .message-bubble {
+    background: #f1f1f1;
+    border-radius: 12px 12px 12px 0;
+    padding: 8px 12px;
 }
 
 .message-bubble {
