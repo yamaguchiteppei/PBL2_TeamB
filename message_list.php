@@ -410,7 +410,7 @@ if (file_exists($partner_profile)) {
             <?php else: ?>
                 <!-- 売却済みにする -->
 <form action="mark_sold.php" method="post"
-      onsubmit="return confirm('この教科書を売却済みにしますか？');">
+      onsubmit="return confirm('【注意】教科書を購入者に渡してから、売却済みにしてください。\nこの教科書を売却済みにしますか？');">
     <input type="hidden" name="index" value="<?= (int)$book_index ?>">
     <input type="hidden" name="redirect"
            value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
