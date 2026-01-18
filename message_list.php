@@ -74,7 +74,8 @@ if ($seller && $book) {
 }
 
 /* ===== チャット一覧生成 ===== */
-$chats = [];
+$seller_chats = []; // 自分が出品者
+$buyer_chats  = []; // 自分が購入者
 $current = $_SESSION['user']['username'];
 
 foreach ($chat_data as $key => $messages) {
@@ -219,23 +220,32 @@ $is_my_book = ($seller && $seller === $_SESSION['user']['username']);
         }
     }
 
-    $chats[] = [
-        'seller'       => $real_seller,
-        'buyer'        => $real_buyer,
-        'book'         => $s_book,
-        'avatar'       => $avatar_path,
-        'display_name' => $display_name,
-        'last_msg'     => $last_msg['text'] ?? '',
-        'time'         => $last_msg['time'] ?? '',
-        'unread'       => $unread,
-        'key'          => $key,
-        'is_sold'      => $is_sold_chat,
-        'book_image'   => $book_image_chat,
-    ];
+$chat_item = [
+    'seller'       => $real_seller,
+    'buyer'        => $real_buyer,
+    'book'         => $s_book,
+    'avatar'       => $avatar_path,
+    'display_name' => $display_name,
+    'last_msg'     => $last_msg['text'] ?? '',
+    'time'         => $last_msg['time'] ?? '',
+    'unread'       => $unread,
+    'key'          => $key,
+    'is_sold'      => $is_sold_chat,
+    'book_image'   => $book_image_chat,
+];
+
+// ★ 自分がどちらの立場かで振り分け
+if ($real_seller === $current) {
+    $seller_chats[] = $chat_item; // 自分が出品者
+} else {
+    $buyer_chats[] = $chat_item;  // 自分が購入者
+}
+
 }
 
 /* ===== 最新順 ===== */
-usort($chats, fn($a, $b) => strcmp($b['time'], $a['time']));
+usort($seller_chats, fn($a, $b) => strcmp($b['time'], $a['time']));
+usort($buyer_chats, fn($a, $b) => strcmp($b['time'], $a['time']));
 $messages = [];
 
 if ($selected_key && isset($chat_data[$selected_key])) {
@@ -268,6 +278,28 @@ if (file_exists($partner_profile)) {
         $partner_avatar = $p['avatar'];
     }
 }
+
+// ===== 右カラム用：表示する相手情報 =====
+if ($current === $seller) {
+    // 自分が出品者 → 相手は購入希望者
+    $partner_user = $buyer;
+    $partner_label = '購入希望者';
+} else {
+    // 自分が購入者 → 相手は出品者
+    $partner_user = $seller;
+    $partner_label = '出品者';
+}
+
+// 相手の表示名
+$partner_display_name = $partner_user;
+$partner_profile = __DIR__ . "/data/profiles/{$partner_user}.json";
+if (file_exists($partner_profile)) {
+    $p = json_decode(file_get_contents($partner_profile), true);
+    if (!empty($p['display_name'])) {
+        $partner_display_name = $p['display_name'];
+    }
+}
+
 
 ?>
 
@@ -305,52 +337,54 @@ if (file_exists($partner_profile)) {
     <div class="chat-list" id="chatList">
         <h3>📚 取引中の教科書</h3>
 
-        <?php if (empty($chats)): ?>
-            <p class="no-chat">取引中のユーザーはまだいません。</p>
-        <?php else: ?>
-            <?php foreach ($chats as $chat): ?>
-<div class="chat-item"
-     data-chat-key="<?= htmlspecialchars($chat['key']) ?>"
-     data-seller="<?= htmlspecialchars($chat['seller']) ?>"
-     data-buyer="<?= htmlspecialchars($chat['buyer']) ?>"
-     data-book="<?= htmlspecialchars($chat['book']) ?>">
+<!-- ================= 出品中の教科書 ================= -->
 
+<h4 class="chat-group-title toggle" data-target="seller">
+  <span class="toggle-icon">▼</span>
+  🟦 出品中の教科書
+</h4>
 
-                    <img src="<?= htmlspecialchars($chat['avatar']) ?>"
-                         class="chat-avatar"
-                         alt="avatar">
+<input
+  type="text"
+  class="chat-search"
+  placeholder="教科書名・出品者名で検索"
+  data-target="seller"
+/>
 
-                    <div class="chat-info">
-                        <div class="chat-book"><?= htmlspecialchars($chat['book']) ?></div>
+<div class="chat-group seller-group">
+  <?php if (empty($seller_chats)): ?>
+    <p class="no-chat small">出品中のチャットはありません</p>
+  <?php else: ?>
+    <?php foreach ($seller_chats as $chat): ?>
+      <?php include 'chat_item.php'; ?>
+    <?php endforeach; ?>
+  <?php endif; ?>
+</div>
 
-                        <div class="chat-seller">
-                            <div class="display-name">
-                                <?= htmlspecialchars($chat['display_name']) ?>
-                                <?php if ($chat['is_sold']): ?>
-                                    <span class="sold-badge small">売却済み</span>
-                                <?php endif; ?>
-                            </div>
+<!-- ================= 購入希望の教科書 ================= -->
 
-                            <div class="account">
-                                アカウント:
-                                <span class="account-name">
-                                    <?= htmlspecialchars($chat['seller']) ?>
-                                </span>
-                            </div>
+<h4 class="chat-group-title toggle" data-target="buyer">
+  <span class="toggle-icon">▼</span>
+  🟩 購入希望の教科書
+</h4>
 
-                            <?php if ($chat['unread'] > 0): ?>
-                                <span class="unread-badge"><?= $chat['unread'] ?></span>
-                            <?php endif; ?>
-                        </div>
+<input
+  type="text"
+  class="chat-search"
+  placeholder="教科書名・出品者名で検索"
+  data-target="buyer"
+/>
 
-                        <div class="chat-preview">
-                            <?= htmlspecialchars($chat['last_msg']) ?>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
+<div class="chat-group buyer-group">
+  <?php if (empty($buyer_chats)): ?>
+    <p class="no-chat small">購入中のチャットはありません</p>
+  <?php else: ?>
+    <?php foreach ($buyer_chats as $chat): ?>
+      <?php include 'chat_item.php'; ?>
+    <?php endforeach; ?>
+  <?php endif; ?>
+</div>
+</div>
 
     <!-- 右カラム -->
     <div class="chat-screen">
@@ -378,12 +412,14 @@ if (file_exists($partner_profile)) {
         </h2>
 
         <div class="chat-sub-info">
-            <span class="seller-display-name">
-              出品者名:        <a href="view_profile.php?user=<?= urlencode($seller) ?>"
-           class="seller-profile-link">
-            <?= htmlspecialchars($seller_display_name) ?>
-        </a>
-    </span>
+<span class="seller-display-name">
+  <?= $partner_label ?>名:
+  <a href="view_profile.php?user=<?= urlencode($partner_user) ?>"
+     class="seller-profile-link">
+    <?= htmlspecialchars($partner_display_name) ?>
+  </a>
+</span>
+
             <span class="seller-account">
             （<?= htmlspecialchars($seller) ?>）
             </span>

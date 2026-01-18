@@ -329,6 +329,26 @@ async function reportMessage(seller, book, text, time, original_sender, buttonEl
 
 // ==== クリック遷移と初期読み込み ====
 document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.chat-search').forEach(input => {
+  input.addEventListener('input', () => {
+    const keyword = input.value.trim().toLowerCase();
+    const target = input.dataset.target; // seller / buyer
+
+    const group = document.querySelector(`.${target}-group`);
+    if (!group) return;
+
+    group.querySelectorAll('.chat-item').forEach(item => {
+      const book = (item.dataset.book || '').toLowerCase();
+      const seller = (item.dataset.seller || '').toLowerCase();
+
+      const hit =
+        book.includes(keyword) ||
+        seller.includes(keyword);
+
+      item.style.display = hit ? 'flex' : 'none';
+    });
+  });
+});
   document.querySelectorAll(".chat-item").forEach((item) => {
     item.addEventListener("click", () => {
         const seller = item.dataset.seller;
@@ -359,7 +379,37 @@ document.addEventListener("DOMContentLoaded", () => {
         if (btnEl && btnEl.disabled) return;
         sendMessage();
       }
+
+      document.querySelectorAll('.chat-group-title.toggle').forEach(title => {
+  title.addEventListener('click', () => {
+    const targetClass = title.dataset.target;
+    const group = document.querySelector(`.${targetClass}`);
+    const search = title.nextElementSibling; // 検索バー
+
+    if (!group || !search) return;
+
+    const isClosed = group.classList.toggle('collapsed');
+    search.classList.toggle('collapsed', isClosed);
+
+    title.classList.toggle('closed', isClosed);
+  });
+});
     });
+    document.querySelectorAll('.chat-group-title.toggle').forEach(title => {
+  title.addEventListener('click', () => {
+    const targetClass = title.dataset.target;
+    const group = document.querySelector(`.${targetClass}`);
+    const search = title.nextElementSibling; // 検索バー
+
+    if (!group || !search) return;
+
+    const isClosed = group.classList.toggle('collapsed');
+    search.classList.toggle('collapsed', isClosed);
+
+    title.classList.toggle('closed', isClosed);
+  });
+});
+    
   }
 
   // ヘッダーの通報ボタン（上の出品者名の横）
@@ -414,5 +464,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+
+document.addEventListener('click', (e) => {
+  const title = e.target.closest('.chat-group-title.toggle');
+  if (!title) return;
+
+  const target = title.dataset.target;
+  const group = document.querySelector(`.${target}-group`);
+  const search = document.querySelector(`.chat-search[data-target="${target}"]`);
+
+  // group がなくても落ちない
+  if (group) group.classList.toggle('collapsed');
+  if (search) search.classList.toggle('collapsed');
+
+  title.classList.toggle('closed');
+});
 
 
