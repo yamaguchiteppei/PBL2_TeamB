@@ -18,6 +18,17 @@ foreach ($books as $index => $book) {
         $other_books[] = $book;
     }
 }
+$headerName = 'ゲスト';
+
+if ($current_user) {
+    $profileFile = __DIR__ . "/data/profiles/{$current_user}.json";
+    if (file_exists($profileFile)) {
+        $profile = json_decode(file_get_contents($profileFile), true);
+        $headerName = $profile['display_name'] ?? $current_user;
+    } else {
+        $headerName = $current_user;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -32,11 +43,18 @@ foreach ($books as $index => $book) {
 <body>
 <header>
     <nav class="menu">
-        <button class="active" onclick="location.href='book_list.php'">購入画面</button>
-        <button onclick="location.href='book_upload.php'">出品</button>
-        <button onclick="location.href='message_list.php'">メッセージ</button>
-        <button onclick="location.href='login.php'">ログイン</button>
-        <button onclick="location.href='profile.php'">プロフィール</button>
+         <div class="menu-center">
+              <button class="active" onclick="location.href='book_list.php'">購入画面</button>
+              <button onclick="location.href='book_upload.php'">出品</button>
+              <button onclick="location.href='message_list.php'">メッセージ</button>
+              <button onclick="location.href='login.php'">ログイン</button>
+              <button onclick="location.href='profile.php'">プロフィール</button>
+         </div>
+         <div class="menu-right">
+            <a href="profile.php" class="seller-link">
+                <?= htmlspecialchars($headerName, ENT_QUOTES, 'UTF-8') ?>（<?= htmlspecialchars($current_user, ENT_QUOTES, 'UTF-8') ?>）
+            </a>
+        </div>
     </nav>
 </header>
 
@@ -176,9 +194,12 @@ foreach ($books as $index => $book) {
                                     <button class="available-btn">🔄 販売中に戻す</button>
                                 </form>
                             <?php else: ?>
-                                <form action="mark_sold.php" method="post" onsubmit="return confirm('この教科書を売却済みにしますか？');">
+                                 <form class="mark-sold-form" action="mark_sold.php" method="post" onsubmit="return confirm('【注意】教科書を購入者に渡してから、売却済みにしてください。\nこの教科書を売却済みにしますか？');">
+     
                                     <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
                                     <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
+                                    <input type="hidden" name="index" value="<?= $book['index'] ?>">
+
                                     <button class="sold-btn">✔️ 売却済みにする</button>
                                 </form>
                             <?php endif; ?>

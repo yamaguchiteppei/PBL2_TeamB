@@ -2,46 +2,49 @@
 require __DIR__ . '/php/auth.php';
 require_login();
 
-$seller = $_POST['seller'] ?? '';
-$book   = $_POST['book'] ?? '';
-
-if ($seller === '' || $book === '') {
-    header("Location: message_list.php");
-    exit;
-}
-
 $file = __DIR__ . '/books.json';
 $books = json_decode(file_get_contents($file), true) ?? [];
 
-/* 対象の教科書を探す */
-$updated = false;
-foreach ($books as &$b) {
-    if (
-        ($b['seller'] ?? '') === $seller &&
-        ($b['title'] ?? '') === $book
-    ) {
-        $b['status'] = 'active';
-        $updated = true;
-        break;
-    }
+$index = filter_input(INPUT_POST, 'index', FILTER_VALIDATE_INT);
+$current = $_SESSION['user']['username'] ?? null;
+
+/* index 不正 */
+if ($index === null || $index === false || !isset($books[$index])) {
+    header("Location: book_list.php");
+    exit;
 }
+
+/* 本人チェック（超重要） */
+if (($books[$index]['seller'] ?? '') !== $current) {
+    header("Location: book_list.php");
+    exit;
+}
+
+/* 販売中に戻す */
+$books[$index]['status'] = 'active';
 
 file_put_contents(
     $file,
     json_encode($books, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
 );
 
-if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+/* AJAX */
+if (
+    !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+    $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest'
+) {
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode([
-        'success' => $updated,
-        'seller' => $seller,
-        'book' => $book,
-        'status' => $updated ? 'active' : null,
+        'success' => true,
+        'status' => 'active'
     ]);
     exit;
 }
 
-/* チャット画面に戻す */
-header("Location: message_list.php?seller=" . urlencode($seller) . "&book=" . urlencode($book));
+/* 通常遷移 */
+$redirect = $_POST['redirect']
+    ?? $_SERVER['HTTP_REFERER']
+    ?? 'book_list.php';
+
+header("Location: " . $redirect);
 exit;
