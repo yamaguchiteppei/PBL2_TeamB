@@ -395,6 +395,7 @@ if (file_exists($partner_profile)) {
         <?php else: ?>
 
     <div class="chat-header"
+    data-chat-key="<?= htmlspecialchars($selected_key) ?>"
      data-seller="<?= htmlspecialchars($seller, ENT_QUOTES) ?>"
      data-buyer="<?= htmlspecialchars($buyer, ENT_QUOTES) ?>"
      data-book="<?= htmlspecialchars($book, ENT_QUOTES) ?>">
@@ -420,9 +421,10 @@ if (file_exists($partner_profile)) {
   </a>
 </span>
 
-            <span class="seller-account">
-            （<?= htmlspecialchars($seller) ?>）
-            </span>
+<span class="seller-account">
+（ID:<?= htmlspecialchars($partner_user) ?>）
+</span>
+
             <span class="book-price">
                 金額:<?= $price_display ?>
             </span>
