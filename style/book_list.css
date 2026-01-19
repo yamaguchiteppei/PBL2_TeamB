@@ -15,9 +15,20 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
+  position: relative;
+  padding: 0.8rem 2rem;
 }
-.menu button {
+
+.menu-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+}
+
+.menu-center button {
   background: white;
   color: #004b97;
   border: none;
@@ -27,11 +38,26 @@ header {
   cursor: pointer;
   transition: 0.2s;
 }
-.menu button:hover { background: #e7edf9; }
-.menu .active {
+.menu-center button:hover { background: #e7edf9; }
+.menu-center .active {
   background: #004b97;
   color: white;
   border: 1px solid white;
+}
+
+.menu-right {
+  margin-left: auto;
+  font-weight: bold;
+}
+
+.menu-right .seller-link {
+  color: white;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.menu-right .seller-link:hover {
+  text-decoration: underline;
 }
 
 /* ===== レイアウト ===== */
@@ -253,10 +279,6 @@ footer {
 /* =========================
    共通ヘッダーメニュー
    ========================= */
-.menu {
-    display: flex;
-    gap: 12px;
-}
 
 .menu button {
     height: 42px;              /* ← 高さを統一 */
