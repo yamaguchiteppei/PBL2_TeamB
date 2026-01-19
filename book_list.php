@@ -62,16 +62,19 @@ if ($current_user) {
 
     <!-- 左：他者の教科書 -->
     <div class="column" id="colOthers">
-        <h2>📘 購入可能な教科書</h2>
+        <div class="column-header">
+            <h2>📘 購入可能な教科書</h2>
 
-        <div class="search-bar">
-            <div class="search-input-wrap">
-                <input id="searchOthers" type="text" placeholder="教科書名で検索..." autocomplete="off" />
-                <button id="clearOthers" class="clear-btn" aria-label="clear">✕</button>
+            <div class="search-bar">
+                <div class="search-input-wrap">
+                    <input id="searchOthers" type="text" placeholder="教科書名で検索..." autocomplete="off" />
+                    <button id="clearOthers" class="clear-btn" aria-label="clear">✕</button>
+                </div>
             </div>
         </div>
 
-        <p class="nohit hidden" id="nohitOthers">該当する教科書はありません。</p>
+        <div class="column-scroll">
+            <p class="nohit hidden" id="nohitOthers">該当する教科書はありません。</p>
 
         <?php if (empty($other_books)): ?>
             <p style="text-align:center; color:#666;">現在、購入できる教科書はありません。</p>
@@ -123,20 +126,24 @@ if ($current_user) {
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
+        </div>
     </div>
 
     <!-- 右：自分の出品 -->
     <div class="column" id="colMine">
-        <h2>📗 自分の出品教科書</h2>
+        <div class="column-header">
+            <h2>📗 自分の出品教科書</h2>
 
-        <div class="search-bar">
-            <div class="search-input-wrap">
-                <input id="searchMine" type="text" placeholder="自分の教科書を検索..." autocomplete="off" />
-                <button id="clearMine" class="clear-btn" aria-label="clear">✕</button>
+            <div class="search-bar">
+                <div class="search-input-wrap">
+                    <input id="searchMine" type="text" placeholder="自分の教科書を検索..." autocomplete="off" />
+                    <button id="clearMine" class="clear-btn" aria-label="clear">✕</button>
+                </div>
             </div>
         </div>
 
-        <p class="nohit hidden" id="nohitMine">該当する教科書はありません。</p>
+        <div class="column-scroll">
+            <p class="nohit hidden" id="nohitMine">該当する教科書はありません。</p>
 
         <?php if (empty($my_books)): ?>
             <p style="text-align:center; color:#666;">まだ出品していません。</p>
@@ -182,12 +189,17 @@ if ($current_user) {
 
                             <?php if ($is_sold): ?>
                                 <form action="mark_available.php" method="post" onsubmit="return confirm('販売中に戻しますか？');">
-                                    <input type="hidden" name="index" value="<?= $book['index'] ?>">
+                                    <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
+                                    <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
                                     <button class="available-btn">🔄 販売中に戻す</button>
                                 </form>
                             <?php else: ?>
-                                <form class="mark-sold-form" action="mark_sold.php" method="post" onsubmit="return confirm('【注意】教科書を購入者に渡してから、売却済みにしてください。\nこの教科書を売却済みにしますか？');">
+                                 <form class="mark-sold-form" action="mark_sold.php" method="post" onsubmit="return confirm('【注意】教科書を購入者に渡してから、売却済みにしてください。\nこの教科書を売却済みにしますか？');">
+     
+                                    <input type="hidden" name="seller" value="<?= htmlspecialchars($seller) ?>">
+                                    <input type="hidden" name="book" value="<?= htmlspecialchars($title) ?>">
                                     <input type="hidden" name="index" value="<?= $book['index'] ?>">
+
                                     <button class="sold-btn">✔️ 売却済みにする</button>
                                 </form>
                             <?php endif; ?>
@@ -196,6 +208,7 @@ if ($current_user) {
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
+        </div>
     </div>
 
 </div>
