@@ -47,6 +47,19 @@ header {
 .column {
   flex: 1;
   padding: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.column-header {
+  flex-shrink: 0;
+  margin-bottom: 10px;
+}
+
+.column-scroll {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(4 * (70px + 14px + 24px));
 }
 .column + .column {
   border-left: 1px solid #ddd;
