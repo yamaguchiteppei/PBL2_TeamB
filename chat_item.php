@@ -1,26 +1,36 @@
 <?php
 if (!isset($chat)) return;
 
+$current = $_SESSION['user']['username'];
 $is_active = isset($_GET['chat_key']) && $_GET['chat_key'] === $chat['key'];
-$link = 'message_list.php?chat_key=' . urlencode($chat['key']);
+
+// ★ 自分が出品者か？
+$is_seller_side = ($chat['seller'] === $current);
 ?>
 
-<a href="<?= htmlspecialchars($link) ?>"
-   class="chat-item <?= $is_active ? 'active' : '' ?> <?= $chat['is_sold'] ? 'sold' : '' ?>"
-      data-book="<?= htmlspecialchars(mb_strtolower($chat['book'])) ?>"
-   data-seller="<?= htmlspecialchars(mb_strtolower($chat['display_name'])) ?>">
+<?php if ($is_seller_side): ?>
+    <!-- 出品者側：既存チャットを開くだけ -->
+    <a href="message_list.php?chat_key=<?= urlencode($chat['key']) ?>"
+       class="chat-item <?= $is_active ? 'active' : '' ?> <?= $chat['is_sold'] ? 'sold' : '' ?>"
+          data-seller="<?= htmlspecialchars($chat['seller']) ?>"
+   data-buyer="<?= htmlspecialchars($chat['buyer']) ?>"
+   data-book="<?= htmlspecialchars($chat['book']) ?>">
 
-    <!-- 左：相手アバター -->
-    <img
-        src="<?= htmlspecialchars($chat['avatar']) ?>"
-        class="chat-avatar"
-        alt="avatar"
-    >
+<?php else: ?>
+    <!-- 購入者側：chat_init を通す -->
+    <form action="chat_init.php" method="post"
+          class="chat-item <?= $is_active ? 'active' : '' ?> <?= $chat['is_sold'] ? 'sold' : '' ?>">
 
-    <!-- 中央：テキスト情報 -->
+        <input type="hidden" name="seller" value="<?= htmlspecialchars($chat['seller']) ?>">
+        <input type="hidden" name="book" value="<?= htmlspecialchars($chat['book']) ?>">
+
+        <button type="submit" class="chat-item-btn">
+<?php endif; ?>
+
+    <!-- 共通表示部分 -->
+    <img src="<?= htmlspecialchars($chat['avatar']) ?>" class="chat-avatar">
+
     <div class="chat-item-body">
-
-        <!-- 教科書名 -->
         <div class="chat-item-book">
             <?= htmlspecialchars($chat['book']) ?>
             <?php if ($chat['is_sold']): ?>
@@ -28,44 +38,21 @@ $link = 'message_list.php?chat_key=' . urlencode($chat['key']);
             <?php endif; ?>
         </div>
 
-        <!-- 出品者名 -->
         <div class="chat-item-seller">
-                <?= $chat['seller'] === $_SESSION['user']['username']
-        ? '購入希望者：'
-        : '出品者：'
-    ?>
-    <?= htmlspecialchars($chat['display_name']) ?>
+            <?= $is_seller_side ? '購入希望者：' : '出品者：' ?>
+            <?= htmlspecialchars($chat['display_name']) ?>
         </div>
 
-        <!-- 最新メッセージ -->
         <div class="chat-item-message">
-            <?= $chat['last_msg'] !== ''
-                ? htmlspecialchars($chat['last_msg'])
-                : '（まだメッセージはありません）'
-            ?>
+            <?= $chat['last_msg'] ?: '（まだメッセージはありません）' ?>
         </div>
-
     </div>
 
-    <!-- 右：教科書画像 -->
-    <img
-        src="<?= htmlspecialchars($chat['book_image']) ?>"
-        class="chat-book-thumb"
-        alt="book"
-    >
+    <img src="<?= htmlspecialchars($chat['book_image']) ?>" class="chat-book-thumb">
 
-    <!-- 未読数 -->
-    <?php if (!empty($chat['unread'])): ?>
-        <div class="chat-item-unread">
-            <?= (int)$chat['unread'] ?>
-        </div>
-    <?php endif; ?>
-
-    <!-- 時間（右下） -->
-    <?php if (!empty($chat['time'])): ?>
-        <div class="chat-item-time">
-            <?= htmlspecialchars($chat['time']) ?>
-        </div>
-    <?php endif; ?>
-
-</a>
+<?php if ($is_seller_side): ?>
+    </a>
+<?php else: ?>
+        </button>
+    </form>
+<?php endif; ?>

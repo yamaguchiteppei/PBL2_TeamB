@@ -916,3 +916,14 @@ header {
   line-height: 1.4;
   vertical-align: middle;
 }
+
+.chat-item {
+    margin: 0;
+}
+
+.chat-item-btn {
+    all: unset;
+    display: flex;
+    width: 100%;
+    cursor: pointer;
+}

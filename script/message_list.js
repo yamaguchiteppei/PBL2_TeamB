@@ -180,63 +180,68 @@ async function sendMessage() {
   const input = document.getElementById("messageInput");
   const text = input.value.trim();
   if (!text) return;
-  // 送信中はボタンを無効化
+
   const btn = document.getElementById('sendBtn');
   if (btn) btn.disabled = true;
 
-  // seller / book 情報を DOM から取得
   const header = document.querySelector('.chat-header');
-  // 優先: data-* 属性（売却バッジなどで textContent が変わるのを避ける）
-  const book = header ? (header.dataset.book || (header.querySelector('.chat-book-title')?.textContent.trim() || '')) : '';
-  const seller = header ? (header.dataset.seller || (header.querySelector('.seller-account')?.textContent.match(/（(.+)）/)?.[1] || '')) : '';
-  if (!seller || !book) {
-    console.warn('送信先情報がありません');
+  const seller = header?.dataset.seller || '';
+  const buyer  = header?.dataset.buyer  || '';
+  const book   = header?.dataset.book   || '';
+
+  if (!seller || !buyer || !book) {
+    console.warn('送信先情報がありません', { seller, buyer, book });
     if (btn) btn.disabled = false;
     return;
   }
 
-  // 楽観的に表示：先にチャット欄に追加してからサーバへ送信
-const tempTime = new Date().toISOString().slice(0,19).replace('T',' ');
-addMessage({ text, time: tempTime, sender: CURRENT_USER, is_me: true });
-  // 直前に追加した要素を保持しておく（失敗時に削除するため）
+  // ★★★ ここが最重要 ★★★
+  const chat_key = makeKey(seller, buyer, book);
+
+  // 楽観的UI
+  const tempTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  addMessage({
+    text,
+    time: tempTime,
+    sender: CURRENT_USER,
+    is_me: true
+  });
+
   const container = document.getElementById("chatMessages");
   const addedEl = container.lastElementChild;
 
   try {
-    const body = `seller=${encodeURIComponent(seller)}&book=${encodeURIComponent(book)}&message=${encodeURIComponent(text)}`;
-    const res = await fetch('message_api.php', {
+    const body =
+      `chat_key=${encodeURIComponent(chat_key)}` +
+      `&message=${encodeURIComponent(text)}`;
+
+    const res = await fetch('send_message.php', {
       method: 'POST',
       credentials: 'same-origin',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body
     });
+
     const data = await res.json();
-    if (data && data.status === 'error' && data.msg === 'not_logged_in') {
-      // 未ログイン：追加したメッセージを削除してログインへ
-      if (addedEl && addedEl.parentNode) addedEl.parentNode.removeChild(addedEl);
-      alert('ログインが必要です。ログインページに移動します。');
-      location.href = 'login.php';
-      return;
-    }
-    if (data.status === 'ok') {
-      // 成功：入力欄をクリア
+
+    if (data.status === 'success') {
       input.value = '';
       location.reload();
-  return;
-    } else {
-      // 失敗：追加した要素を削除して通知
-      if (addedEl && addedEl.parentNode) addedEl.parentNode.removeChild(addedEl);
-      alert('送信に失敗しました');
+      return;
     }
+
+    throw new Error('send failed');
+
   } catch (e) {
-    // ネットワークエラーなど
-    if (addedEl && addedEl.parentNode) addedEl.parentNode.removeChild(addedEl);
-    console.error('送信エラー', e);
-    alert('送信エラーが発生しました');
+    if (addedEl) addedEl.remove();
+    alert('送信に失敗しました');
+    console.error(e);
   } finally {
     if (btn) btn.disabled = false;
   }
 }
+
+
 
 // ==== メッセージ通報処理（個別メッセージ用） ====
 function handleMessageReport(buttonEl, msg) {
@@ -340,30 +345,41 @@ document.addEventListener("DOMContentLoaded", () => {
     group.querySelectorAll('.chat-item').forEach(item => {
       const book = (item.dataset.book || '').toLowerCase();
       const seller = (item.dataset.seller || '').toLowerCase();
+      const buyer  = (item.dataset.buyer  || '').toLowerCase();
 
       const hit =
         book.includes(keyword) ||
-        seller.includes(keyword);
-
+        seller.includes(keyword) ||
+        buyer.includes(keyword);
       item.style.display = hit ? 'flex' : 'none';
     });
   });
 });
-  document.querySelectorAll(".chat-item").forEach((item) => {
-    item.addEventListener("click", () => {
-        const seller = item.dataset.seller;
-        const book = item.dataset.book;
-        const chatKey = item.dataset.chatKey;
+document.querySelectorAll(".chat-item").forEach((item) => {
+  item.addEventListener("click", () => {
+    const seller = item.dataset.seller;
+    const buyer  = item.dataset.buyer;
+    const book   = item.dataset.book;
 
-        // 右カラムの情報を更新
-        const chatHeader = document.querySelector('.chat-header');
-        const chatMessages = document.getElementById('chatMessages');
+    if (!seller || !buyer || !book) {
+      console.warn('chat-item dataset 不足', { seller, buyer, book });
+      return;
+    }
 
-        // ここで AJAX で chat_log.json を取得するか
-        // PHP 側に reload させるため location.href = ? でもOK
-        window.location.href = `message_list.php?seller=${encodeURIComponent(seller)}&book=${encodeURIComponent(book)}&chat_key=${encodeURIComponent(chatKey)}`;
-    });
+    // chat-header を更新
+    const header = document.querySelector('.chat-header');
+    header.dataset.seller = seller;
+    header.dataset.buyer  = buyer;
+    header.dataset.book   = book;
+
+    // active 切り替え
+    document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+
+    loadChat(seller, buyer, book);
   });
+});
+
 
   const btn = document.getElementById("sendBtn");
   if (btn) btn.addEventListener("click", sendMessage);
