@@ -150,7 +150,7 @@ foreach ($books as $index => $book) {
                         <div class="book-title"><?= htmlspecialchars($title) ?></div>
                         <div class="book-faculty"><?= htmlspecialchars($faculty) ?></div>
                         <div class="book-seller"><?= htmlspecialchars($sellerName) ?> （<?= htmlspecialchars($seller) ?>）</div>
-                        <<div class="book-price">
+                        <div class="book-price">
                             <?= (intval($price) === 0) ? '無料' : htmlspecialchars($price).'円' ?>
                         </div>
 

@@ -59,32 +59,19 @@
         "sellerName": "abcdefgh"
     },
     {
-        "id": "696864c94ba63",
-        "title": "応用数学３",
-        "image": "images\/20260115125341_スクリーンショット 2026-01-13 130225.png",
-        "trade_type": "free",
-        "price": 0,
-        "faculty": "工学部",
-        "department": "工学科",
-        "course": "応用情報工学コース",
-        "detail": "ああああa",
-        "seller": "k520111b",
-        "created_at": "2026-01-15 12:53:45",
-        "sellerName": "奥山颯大",
-        "status": "active"
-    },
-    {
         "id": "69686a7ba8e9d",
         "title": "応用数学６",
         "image": "images\/20260115131802_gazou.png",
         "trade_type": "free",
         "price": 0,
-        "faculty": "工学部",
-        "department": "工学科",
-        "course": "コンピュータ科学コース",
+        "faculty": "共通教育",
+        "department": "共通教育",
+        "course": null,
         "detail": "",
         "seller": "k520111b",
         "created_at": "2026-01-15 13:18:03",
-        "sellerName": "奥山颯大"
+        "sellerName": "奥山颯大",
+        "trade": null,
+        "status": "active"
     }
 ]
