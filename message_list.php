@@ -403,7 +403,7 @@ if (file_exists($partner_profile)) {
 
     <div class="chat-header-left">
         <h2 class="chat-book-title">
-                <a href="book_detail.php?index=<?= urlencode($book_index) ?>"
+                <a href="book_detail.php?index=<?= urlencode($selected_book_index) ?>"
        class="book-detail-link">
         <?= htmlspecialchars($book) ?>
     </a>
