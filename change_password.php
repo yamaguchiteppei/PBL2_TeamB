@@ -20,9 +20,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username'])) {
             $user['reset_expires'] = time() + 3600; // 1時間有効
             file_put_contents($data_file, json_encode($users, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
+            // ====== 認証URL生成（自動判定版） ======
+
+            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+
+            $host = $_SERVER['HTTP_HOST'];
+
+            $scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+
+            $baseUrl = $scheme . "://" . $host . $scriptDir;
+
+            $reset_link = $baseUrl . "/change_password_confirm.php?token={$token}";
+            // ====== メール送信処理（日本語UTF-8固定） ======
+            mb_language("Japanese");
+            mb_internal_encoding("UTF-8");
+
             // === メール本文 ===
             $domain = $_SERVER['HTTP_HOST'];
-            $reset_link = "https://{$domain}/~k484yama/webpro/yuzurin1/change_password_confirm.php?token={$token}";
             $email = $user['email'];
 
             $subject = "【愛媛大学yuzurinプロジェクト】パスワード再設定メール";
