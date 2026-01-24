@@ -14,6 +14,10 @@ $books = [];
 $books_file = __DIR__ . '/books.json';
 if (file_exists($books_file)) {
     $books = json_decode(file_get_contents($books_file), true) ?? [];
+    $book_map = [];
+foreach ($books as $b) {
+    $book_map[$b['title']] = $b;
+}
 }
 
 /* ===== GET パラメータ ===== */
@@ -150,18 +154,12 @@ if (file_exists($profile_file)) {
 }
 
 
-    /* 売却済み判定（チャット単位） */
-    $is_sold_chat = false;
-    foreach ($books as $b) {
-        if (
-            ($b['seller'] ?? '') === $s_name &&
-            ($b['title'] ?? '') === $s_book &&
-            ($b['status'] ?? '') === 'sold'
-        ) {
-            $is_sold_chat = true;
-            break;
-        }
-    }
+/* 売却済み判定（book 基準・全チャット共通） */
+$is_sold_chat = false;
+
+if (isset($book_map[$s_book])) {
+    $is_sold_chat = (($book_map[$s_book]['status'] ?? 'active') === 'sold');
+}
     $book_index = null;
 
 $selected_book_index = null;
