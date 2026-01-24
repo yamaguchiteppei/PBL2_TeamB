@@ -209,18 +209,16 @@ $price_display = ($book_price === '' || $book_price === '0')
 $is_my_book = ($seller && $seller === $_SESSION['user']['username']);
 
     /* 教科書画像（チャット用） */
-    $book_image_chat = 'images/sample_book.png';
-    foreach ($books as $b) {
-        if (
-            ($b['seller'] ?? '') === $s_name &&
-            ($b['title'] ?? '') === $s_book &&
-            !empty($b['image']) &&
-            file_exists(__DIR__ . '/' . $b['image'])
-        ) {
-            $book_image_chat = $b['image'];
-            break;
-        }
+/* 教科書画像（チャット用：常に real_seller 基準） */
+$book_image_chat = 'images/sample_book.png';
+
+if (isset($book_map[$s_book])) {
+    $img = $book_map[$s_book]['image'] ?? '';
+    if ($img && file_exists(__DIR__ . '/' . $img)) {
+        $book_image_chat = $img;
     }
+}
+
 
 $chat_item = [
     'seller'       => $real_seller,
