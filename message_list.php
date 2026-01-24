@@ -164,13 +164,17 @@ if (file_exists($profile_file)) {
     }
     $book_index = null;
 
-foreach ($books as $i => $b) {
-    if (
-        ($b['seller'] ?? '') === $s_name &&
-        ($b['title'] ?? '') === $s_book
-    ) {
-        $book_index = $i;
-        break;
+$selected_book_index = null;
+
+if ($selected_key && isset($chat_data[$selected_key])) {
+    foreach ($books as $i => $b) {
+        if (
+            ($b['seller'] ?? '') === $seller &&
+            ($b['title'] ?? '') === $book
+        ) {
+            $selected_book_index = $i;
+            break;
+        }
     }
 }
 
@@ -438,7 +442,7 @@ if (file_exists($partner_profile)) {
                 <!-- 販売中に戻す -->
 <form action="mark_available.php" method="post"
       onsubmit="return confirm('販売中に戻しますか？');">
-    <input type="hidden" name="index" value="<?= (int)$book_index ?>">
+    <input type="hidden" name="index" value="<?= (int)$selected_book_index ?>">
     <input type="hidden" name="redirect"
            value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
     <button class="header-action-btn available">
@@ -449,7 +453,7 @@ if (file_exists($partner_profile)) {
                 <!-- 売却済みにする -->
 <form action="mark_sold.php" method="post"
       onsubmit="return confirm('【注意】教科書を購入者に渡してから、売却済みにしてください。\nこの教科書を売却済みにしますか？');">
-    <input type="hidden" name="index" value="<?= (int)$book_index ?>">
+    <input type="hidden" name="index" value="<?= (int)$selected_book_index ?>">
     <input type="hidden" name="redirect"
            value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
     <button class="header-action-btn sold">
