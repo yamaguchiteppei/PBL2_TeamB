@@ -24,7 +24,7 @@ $display_name = htmlspecialchars($profile['display_name'] ?? '名無し', ENT_QU
 $username     = htmlspecialchars($profile['username'] ?? $view_user, ENT_QUOTES, 'UTF-8');
 $faculty      = htmlspecialchars($profile['faculty'] ?? '', ENT_QUOTES, 'UTF-8');
 $bio          = htmlspecialchars($profile['bio'] ?? '', ENT_QUOTES, 'UTF-8');
-$avatar       = htmlspecialchars($profile['avatar'] ?? 'images/sample_avatar.png', ENT_QUOTES, 'UTF-8');
+$avatar       = htmlspecialchars($profile['avatar'] ?? 'images/default.jpg', ENT_QUOTES, 'UTF-8');
 $emailFull    = $username ? ($username . '@mails.cc.ehime-u.ac.jp') : '';
 ?>
 <!DOCTYPE html>
