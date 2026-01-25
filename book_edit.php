@@ -3,41 +3,107 @@ require __DIR__ . '/php/auth.php';
 require_login();
 
 $books_file = __DIR__ . '/books.json';
-$books = file_exists($books_file) ? json_decode(file_get_contents($books_file), true) : [];
+$books = file_exists($books_file)
+    ? json_decode(file_get_contents($books_file), true)
+    : [];
 
 $index = filter_input(INPUT_GET, 'index', FILTER_VALIDATE_INT);
 if ($index === false || !isset($books[$index])) {
-  die('対象の教科書が見つかりません');
+    die('対象の教科書が見つかりません');
 }
 
+$oldTitle = $books[$index]['title'];
 $book = $books[$index];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-  $books[$index]['title'] = trim($_POST['title']);
-  $books[$index]['trade'] = $_POST['trade'];
-  $books[$index]['price'] = ($_POST['trade'] === 'paid') ? (int)$_POST['price'] : 0;
-  $books[$index]['faculty'] = $_POST['faculty'];
-  $books[$index]['department'] = $_POST['department'];
-  $books[$index]['course'] = $_POST['course'];
-  $books[$index]['detail'] = trim($_POST['detail']);
-    
-  if (!empty($_FILES['book_image']['name'])) {
-    $ext = pathinfo($_FILES['book_image']['name'], PATHINFO_EXTENSION);
-    $filename = uniqid('book_', true) . '.' . $ext;
-    $path = 'uploads/' . $filename;
+    $newTitle = trim($_POST['title']);
 
-    move_uploaded_file($_FILES['book_image']['tmp_name'], $path);
-    $books[$index]['image'] = $path;
-  }
+    /* ===== 教科書名変更処理 ===== */
+    if ($newTitle !== $oldTitle) {
 
-  file_put_contents(
-    $books_file,
-    json_encode($books, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
-  );
+        // ★ 自分以外で同名があるか確認
+        $exists = false;
+        foreach ($books as $i => $b) {
+            if ($i === $index) continue;
+            if (($b['title'] ?? '') === $newTitle) {
+                $exists = true;
+                break;
+            }
+        }
 
-  header('Location: book_list.php');
-  exit;
+        // ★ 同名がある場合のみ番号付与
+        if ($exists) {
+            $n = 2;
+            do {
+                $candidate = "{$newTitle}({$n})";
+                $n++;
+            } while (in_array($candidate, array_column($books, 'title'), true));
+            $newTitle = $candidate;
+        }
+    }
+
+    // ★ 確定タイトルを保存
+    $books[$index]['title'] = $newTitle;
+
+    /* ===== chat_log.json のキー名変更 ===== */
+    $chat_file = __DIR__ . '/chat_log.json';
+
+    if (file_exists($chat_file)) {
+        $chat_data = json_decode(file_get_contents($chat_file), true);
+        $new_chat_data = [];
+
+        foreach ($chat_data as $key => $messages) {
+
+            $pos = strrpos($key, '_');
+            if ($pos === false) {
+                $new_chat_data[$key] = $messages;
+                continue;
+            }
+
+            $base  = substr($key, 0, $pos);
+            $title = substr($key, $pos + 1);
+
+            // ★ 完全一致のみ変更
+            if ($title === $oldTitle) {
+                $newKey = $base . '_' . $newTitle;
+                $new_chat_data[$newKey] = $messages;
+            } else {
+                $new_chat_data[$key] = $messages;
+            }
+        }
+
+        file_put_contents(
+            $chat_file,
+            json_encode($new_chat_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
+            LOCK_EX
+        );
+    }
+
+    /* ===== その他の更新 ===== */
+    $books[$index]['trade'] = $_POST['trade'];
+    $books[$index]['price'] = ($_POST['trade'] === 'paid') ? (int)$_POST['price'] : 0;
+    $books[$index]['faculty'] = $_POST['faculty'];
+    $books[$index]['department'] = $_POST['department'];
+    $books[$index]['course'] = $_POST['course'];
+    $books[$index]['detail'] = trim($_POST['detail']);
+
+    if (!empty($_FILES['book_image']['name'])) {
+        $ext = pathinfo($_FILES['book_image']['name'], PATHINFO_EXTENSION);
+        $filename = uniqid('book_', true) . '.' . $ext;
+        $path = 'uploads/' . $filename;
+        move_uploaded_file($_FILES['book_image']['tmp_name'], $path);
+        $books[$index]['image'] = $path;
+    }
+
+    file_put_contents(
+        $books_file,
+        json_encode($books, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
+        LOCK_EX
+    );
+
+    header('Location: book_list.php');
+    exit;
 }
 ?>
 

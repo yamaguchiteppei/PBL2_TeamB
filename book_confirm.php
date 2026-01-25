@@ -34,10 +34,6 @@ if (isset($_FILES['book_image']) && $_FILES['book_image']['error'] === UPLOAD_ER
     // 画像がない、または確認画面のリロード時でパスがない場合
     $imagePath = 'images/sample_book.jpg';
 }
-
-// ===== 3. 出品確定ボタンが押された時の処理 =====
-if (isset($_POST['confirm'])) {
-
     $books_file = __DIR__ . '/books.json';
     $books = file_exists($books_file)
         ? json_decode(file_get_contents($books_file), true)
@@ -45,31 +41,37 @@ if (isset($_POST['confirm'])) {
 
     $seller = $_SESSION['user']['username'] ?? 'ゲストユーザー';
 
-    /* ===== 同名チェック ===== */
-    $existing_titles = [];
+/* ===== 同名チェック（全ユーザー対象） ===== */
+$existing_titles = [];
 
-    foreach ($books as $b) {
-        if (
-            ($b['seller'] ?? '') === $seller &&
-            (
-                ($b['title'] ?? '') === $bookName ||
-                preg_match('/^' . preg_quote($bookName, '/') . '\(\d+\)$/', $b['title'] ?? '')
-            )
-        ) {
-            $existing_titles[] = $b['title'];
-        }
+foreach ($books as $b) {
+    if (
+        ($b['title'] ?? '') === $bookName ||
+        preg_match(
+            '/^' . preg_quote($bookName, '/') . '\(\d+\)$/',
+            $b['title'] ?? ''
+        )
+    ) {
+        $existing_titles[] = $b['title'];
     }
+}
 
-    /* ===== 別名付与 ===== */
-    if (!empty($existing_titles)) {
-        $i = 2;
-        do {
-            $newName = $bookName . "({$i})";
-            $i++;
-        } while (in_array($newName, $existing_titles, true));
+$isRenamed = false; // ★ 追加：番号付与フラグ
+/* ===== 別名付与 ===== */
+if (!empty($existing_titles)) {
+    $i = 2;
+    do {
+        $newName = $bookName . "({$i})";
+        $i++;
+    } while (in_array($newName, $existing_titles, true));
 
-        $bookName = $newName;
-    }
+    $bookName = $newName;
+    $isRenamed = true; 
+}
+// ===== 3. 出品確定ボタンが押された時の処理 =====
+if (isset($_POST['confirm'])) {
+
+
 
     $profileFile = __DIR__ . '/data/profiles/' . ($_SESSION['user']['username'] ?? '') . '.json';
     $profile = file_exists($profileFile) ? json_decode(file_get_contents($profileFile), true): [];
@@ -135,6 +137,20 @@ if (isset($_POST['confirm'])) {
 <h2 class="page-title">📘 出品内容の確認</h2>
 
 <div class="confirm-box">
+    <?php if (!empty($isRenamed)): ?>
+    <div style="
+        background: #fff3cd;
+        border: 1px solid #ffeeba;
+        color: #856404;
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        font-size: 0.95em;
+    ">
+        ⚠️ 同じ教科書名がすでに出品されていたため、<br>
+        教科書名は <strong>「<?= htmlspecialchars($bookName) ?>」</strong> に変更されます。
+    </div>
+<?php endif; ?>
     <p class="message">以下の内容で出品します。よろしければ「出品する」を押してください。</p>
 
     <div class="confirm-item">
