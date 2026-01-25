@@ -142,6 +142,41 @@ if (isset($_GET['load_chat'])) {
     exit;
 }
 
+/* =========================================================
+   差分ポーリング（新着メッセージのみ）
+========================================================= */
+if (isset($_GET['poll']) && isset($_GET['since'])) {
+    $key   = $_GET['poll'];
+    $since = $_GET['since'];
+
+    if (!isset($chat_data[$key])) {
+        echo json_encode([]);
+        exit;
+    }
+
+    [$u1, $u2] = explode('_', $key, 3);
+    if ($current !== $u1 && $current !== $u2) {
+        http_response_code(403);
+        exit;
+    }
+
+    $result = [];
+
+    foreach ($chat_data[$key] as $m) {
+        if ($m['time'] > $since) {
+            $result[] = [
+                "sender" => $m['sender'],
+                "text"   => $m['text'],
+                "time"   => $m['time'],
+                "read"   => $m['read'],
+                "is_me"  => ($m['sender'] === $current)
+            ];
+        }
+    }
+
+    echo json_encode($result);
+    exit;
+}
 
 /* =========================================================
    未読数リスト

@@ -127,60 +127,29 @@ tryLoadAvatar();
 
 
 // ==== チャット履歴読み込み ====
-async function loadChat(seller,buyer,book) {
+async function loadChat(seller, buyer, book) {
   const key = makeKey(seller, buyer, book);
-  try {
-    const res = await fetch(`message_api.php?load_chat=${encodeURIComponent(key)}`, { credentials: 'same-origin' });
-    if (!res.ok) return;
 
-    const messages = await res.json();
-    const container = document.getElementById("chatMessages");
-      const prevScrollTop = container.scrollTop;
-  const prevScrollHeight = container.scrollHeight;
-    container.innerHTML = '';
+  const res = await fetch(
+    `message_api.php?load_chat=${encodeURIComponent(key)}`,
+    { credentials: 'same-origin' }
+  );
+  if (!res.ok) return;
 
-    let lastDate = null;
+  const messages = await res.json();
+  const container = document.getElementById("chatMessages");
 
+  container.innerHTML = '';
+  lastMessageTime = null;
 
-messages.forEach(m => {
-      const msgDate = new Date(m.time);
-      const yyyyMMdd = msgDate.toISOString().slice(0, 10);
-      const today = new Date();
-      const todayStr = today.toISOString().slice(0, 10);
+  messages.forEach(m => {
+    addMessage(m);
+    lastMessageTime = m.time; // ★最後の時刻を保存
+  });
 
-      const yesterday = new Date();
-      yesterday.setDate(today.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().slice(0, 10);
-
-      // --- 日付が変わったら区切りを追加 ---
-      if (yyyyMMdd !== lastDate) {
-        let label = yyyyMMdd;
-
-        if (yyyyMMdd === todayStr) label = "今日";
-        else if (yyyyMMdd === yesterdayStr) label = "昨日";
-
-        addDateSeparator(label);
-        lastDate = yyyyMMdd;
-      }
-
-      addMessage(m);
-    });
-
-      const newScrollHeight = container.scrollHeight;
-
-  // スクロール位置を復元
-  container.scrollTop =
-    prevScrollTop + (newScrollHeight - prevScrollHeight);
-
-    // 既読化
-    await fetch(`message_api.php?mark_read=${encodeURIComponent(key)}`, {
-      credentials: 'same-origin'
-    });
-
-  } catch (e) {
-    console.error("チャット読み込み失敗", e);
-  }
+  container.scrollTop = container.scrollHeight;
 }
+
 
 
 
@@ -515,15 +484,53 @@ function startPolling() {
   if (pollingTimer) clearInterval(pollingTimer);
 
   pollingTimer = setInterval(() => {
-    const header = document.querySelector('.chat-header');
-    if (!header) return;
+    pollNewMessages(); // ★ 差分取得だけ
+  }, 3000);
+}
 
-    const seller = header.dataset.seller;
-    const buyer  = header.dataset.buyer;
-    const book   = header.dataset.book;
 
-    if (seller && buyer && book) {
-      loadChat(seller, buyer, book);
-    }
-  }, 3000); // 3秒
+
+// 最後に表示したメッセージの時刻を保持
+let lastMessageTime = null;
+
+async function pollNewMessages() {
+  const header = document.querySelector('.chat-header');
+  if (!header ) return;
+
+  const seller = header.dataset.seller;
+  const buyer  = header.dataset.buyer;
+  const book   = header.dataset.book;
+
+  if (!seller || !buyer || !book) return;
+
+  const key = makeKey(seller, buyer, book);
+
+  const res = await fetch(
+    `message_api.php?poll=${encodeURIComponent(key)}&since=${encodeURIComponent(lastMessageTime)}`,
+    { credentials: 'same-origin' }
+  );
+  if (!res.ok) return;
+
+  const messages = await res.json();
+  if (!messages.length) return;
+
+  const container = document.getElementById("chatMessages");
+
+  // 下の方を見ている時だけ自動スクロール
+  const nearBottom =
+    container.scrollHeight - container.scrollTop - container.clientHeight < 80;
+
+  messages.forEach(m => {
+    addMessage(m);
+    lastMessageTime = m.time;
+  });
+
+  // メッセージ0件でも時刻を入れる
+if (!lastMessageTime) {
+  lastMessageTime = new Date().toISOString().slice(0,19).replace('T',' ');
+}
+
+  if (nearBottom) {
+    container.scrollTop = container.scrollHeight;
+  }
 }
