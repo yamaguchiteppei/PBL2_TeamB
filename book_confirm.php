@@ -37,11 +37,44 @@ if (isset($_FILES['book_image']) && $_FILES['book_image']['error'] === UPLOAD_ER
 
 // ===== 3. 出品確定ボタンが押された時の処理 =====
 if (isset($_POST['confirm'])) {
+
+    $books_file = __DIR__ . '/books.json';
+    $books = file_exists($books_file)
+        ? json_decode(file_get_contents($books_file), true)
+        : [];
+
+    $seller = $_SESSION['user']['username'] ?? 'ゲストユーザー';
+
+    /* ===== 同名チェック ===== */
+    $existing_titles = [];
+
+    foreach ($books as $b) {
+        if (
+            ($b['seller'] ?? '') === $seller &&
+            (
+                ($b['title'] ?? '') === $bookName ||
+                preg_match('/^' . preg_quote($bookName, '/') . '\(\d+\)$/', $b['title'] ?? '')
+            )
+        ) {
+            $existing_titles[] = $b['title'];
+        }
+    }
+
+    /* ===== 別名付与 ===== */
+    if (!empty($existing_titles)) {
+        $i = 2;
+        do {
+            $newName = $bookName . "({$i})";
+            $i++;
+        } while (in_array($newName, $existing_titles, true));
+
+        $bookName = $newName;
+    }
+
     $profileFile = __DIR__ . '/data/profiles/' . ($_SESSION['user']['username'] ?? '') . '.json';
     $profile = file_exists($profileFile) ? json_decode(file_get_contents($profileFile), true): [];
     $sellerName = $profile['display_name'] ?? ($_SESSION['user']['username'] ?? '名無し');
     $books_file = __DIR__ . '/books.json';
-    $books = file_exists($books_file) ? json_decode(file_get_contents($books_file), true) : [];
 
     // ログインユーザー名（未ログイン時はゲスト扱い）
     $seller = $_SESSION['user']['username'] ?? 'ゲストユーザー';
