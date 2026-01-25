@@ -226,7 +226,7 @@ async function sendMessage() {
 
     if (data.status === 'success') {
       input.value = '';
-      location.reload();
+        loadChat(seller, buyer, book);
       return;
     }
 
@@ -377,6 +377,7 @@ document.querySelectorAll(".chat-item").forEach((item) => {
     item.classList.add('active');
 
     loadChat(seller, buyer, book);
+    startPolling();
   });
 });
 
@@ -470,7 +471,10 @@ document.querySelectorAll(".chat-item").forEach((item) => {
     const book = header.dataset.book || (header.querySelector('.chat-book-title')?.textContent.trim() || '');
     const seller = header.dataset.seller || (header.querySelector('.seller-account')?.textContent.match(/（(.+)）/)?.[1] || '');
     const buyer = header.dataset.buyer;
-    if (book && seller && buyer) loadChat(seller,buyer,book);
+    if (book && seller && buyer) {
+      loadChat(seller,buyer,book);
+      startPolling();
+    }
   
   // 選択されたチャットアイテムを自動スクロール
   const activeItem = document.querySelector(".chat-item.active");
@@ -496,4 +500,21 @@ document.addEventListener('click', (e) => {
   title.classList.toggle('closed');
 });
 
+let pollingTimer = null;
 
+function startPolling() {
+  if (pollingTimer) clearInterval(pollingTimer);
+
+  pollingTimer = setInterval(() => {
+    const header = document.querySelector('.chat-header');
+    if (!header) return;
+
+    const seller = header.dataset.seller;
+    const buyer  = header.dataset.buyer;
+    const book   = header.dataset.book;
+
+    if (seller && buyer && book) {
+      loadChat(seller, buyer, book);
+    }
+  }, 3000); // 3秒
+}
