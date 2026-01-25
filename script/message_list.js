@@ -1,3 +1,4 @@
+
 // ==== 時刻パース関数 ====
 // 例: "2025-12-14 15:22:30" → Date オブジェクトに変換
 function parseTime(t) {
@@ -116,7 +117,7 @@ tryLoadAvatar();
 
   const container = document.getElementById("chatMessages");
   container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+  
 }
 
 
@@ -134,6 +135,8 @@ async function loadChat(seller,buyer,book) {
 
     const messages = await res.json();
     const container = document.getElementById("chatMessages");
+      const prevScrollTop = container.scrollTop;
+  const prevScrollHeight = container.scrollHeight;
     container.innerHTML = '';
 
     let lastDate = null;
@@ -162,6 +165,12 @@ messages.forEach(m => {
 
       addMessage(m);
     });
+
+      const newScrollHeight = container.scrollHeight;
+
+  // スクロール位置を復元
+  container.scrollTop =
+    prevScrollTop + (newScrollHeight - prevScrollHeight);
 
     // 既読化
     await fetch(`message_api.php?mark_read=${encodeURIComponent(key)}`, {
