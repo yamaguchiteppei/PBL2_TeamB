@@ -23,8 +23,12 @@ require_login();
         <button onclick="location.href='profile.php'">プロフィール</button>
     </nav>
 </header>
-
-<h2 class="page-title">📚 教科書出品フォーム</h2>
+<div class="page-header-wrapper">
+  <div class="page-header">
+    <button class="back-btn" type="button" onclick="history.back()">← 戻る</button>
+    <h2 class="page-title">📚 教科書出品フォーム</h2>
+  </div>
+</div>
 
 <form action="book_confirm.php" method="post" enctype="multipart/form-data">
     
